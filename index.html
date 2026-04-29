@@ -38,7 +38,6 @@
         .btn-main:hover { background: #2c5282; transform: translateY(-2px); }
 
         .btn-print { background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-next { background: #2b6cb0; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         .print-header-actions { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1a365d; margin-bottom: 20px; padding-bottom: 10px; }
         .action-buttons { display: flex; gap: 10px; }
 
@@ -114,7 +113,7 @@
         <div class="form-group" style="margin-bottom: 25px; text-align:left;">
             <label>Số điện thoại / Mã NV (*)</label>
             <input type="text" id="sale-phone" placeholder="Ví dụ: 0987654321">
-            <span style="font-size: 11px; color: #e53e3e; margin-top: 4px; font-style: italic;">* Viết liền không dấu (Độ dài 4-15 ký tự).</span>
+            <span style="font-size: 11px; color: #e53e3e; margin-top: 4px; font-style: italic;">* Viết liền không dấu, độ dài 4-15 ký tự.</span>
         </div>
         
         <button class="btn-main" style="margin-top:0;" onclick="saveSalesInfo()">XÁC NHẬN BẮT ĐẦU</button>
@@ -170,7 +169,7 @@
             <div class="extra-discount-container">
                 <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; color: #2b6cb0;">
                     <input type="checkbox" id="enable-extra" onchange="toggleExtraDetails()" style="width: 20px; height: 20px;">
-                    <strong>Áp dụng chiết khấu bổ sung (Tính lũy kế trên Tổng giá)</strong>
+                    <strong>Áp dụng chiết khấu bổ sung (Tính lũy kế trên Tiền Đất)</strong>
                 </label>
                 
                 <div id="extra-details-area" style="display: none;">
@@ -193,8 +192,8 @@
                                 </td>
                                 <td>
                                     <select class="ex-base">
-                                        <option value="after-vat">Giá sau CK trước (Gồm VAT)</option>
-                                        <option value="before-vat">Giá sau CK trước (Chưa VAT)</option>
+                                        <option value="after-vat">Giá tiền Đất sau CK trước (Gồm VAT)</option>
+                                        <option value="before-vat">Giá tiền Đất sau CK trước (Chưa VAT)</option>
                                     </select>
                                 </td>
                                 <td><input type="number" class="ex-value" placeholder="Nhập giá trị..." step="0.1"></td>
@@ -209,7 +208,7 @@
     </div>
 
     <div id="custom-discount-box" class="custom-discount-box no-print">
-        <label style="font-weight: bold; color: #c05621;">Nhập thủ công các mục chiết khấu (Tính lũy kế trên Tổng giá):</label>
+        <label style="font-weight: bold; color: #c05621;">Nhập thủ công các mục chiết khấu (Tính lũy kế trên Tiền Đất):</label>
         <table class="custom-table">
             <thead><tr><th style="text-align: left;">Nội dung/Lý do</th><th style="text-align: left;">Tỷ lệ (%)</th><th></th></tr></thead>
             <tbody id="custom-body">
@@ -235,7 +234,6 @@
             <h3 class="result-header">CHI TIẾT PHIẾU TÍNH GIÁ</h3>
             <div class="action-buttons no-print">
                 <button class="btn-print" onclick="inPhieu()">🖨️ TẢI PDF / IN PHIẾU</button>
-                <button id="btn-goto-index2" class="btn-next" style="display: none;" onclick="transferToIndex2()">DÒNG THU BÁN PHÒNG & ROI →</button>
             </div>
         </div>
         
@@ -251,7 +249,7 @@
             <div class="info-item" style="border:none; padding-bottom: 0;"><span>Giá trị Xây dựng (gồm VAT):</span> <strong id="out-price-build"></strong></div>
             <div class="info-item" style="border:none; padding-bottom: 0;"><span>Tổng giá niêm yết:</span> <strong id="out-price-raw" style="font-size: 18px; color: #1a365d"></strong></div>
             
-            <div style="margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #2d3748;">Chi tiết áp dụng chiết khấu:</div>
+            <div style="margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #2d3748;">Chi tiết áp dụng chiết khấu (Được trừ trực tiếp vào Tiền Đất):</div>
             <div id="discount-breakdown" class="discount-detail"></div>
             
             <div class="info-item final-price-container" style="border:none; margin-top: 20px; border-top: 2px dashed #feb2b2; padding-top: 15px; align-items: center;">
@@ -385,7 +383,7 @@
     function addExtraRow() {
         const row = `<tr>
             <td><select class="ex-type" onchange="handleExTypeChange(this)"><option value="percent">Tỷ lệ (%)</option><option value="amount">Số tiền (VNĐ)</option></select></td>
-            <td><select class="ex-base"><option value="after-vat">Giá sau CK trước (Gồm VAT)</option><option value="before-vat">Giá sau CK trước (Chưa VAT)</option></select></td>
+            <td><select class="ex-base"><option value="after-vat">Giá tiền Đất sau CK trước (Gồm VAT)</option><option value="before-vat">Giá tiền Đất sau CK trước (Chưa VAT)</option></select></td>
             <td><input type="number" class="ex-value" placeholder="Nhập giá trị..." step="0.1"></td>
             <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
         </tr>`;
@@ -401,7 +399,6 @@
         document.getElementById('custom-body').insertAdjacentHTML('beforeend', row);
     }
 
-    // Xóa sạch khoảng trắng và dấu phẩy trong file JSON
     function cleanAndParsePrice(val) {
         if (!val) return 0;
         let cleanVal = String(val).replace(/\s+/g, '').replace(/[^0-9]/g, '');
@@ -430,6 +427,38 @@
         const keyThucTe = Object.keys(item).find(k => k.trim().toLowerCase() === tenCotCanTim.toLowerCase());
         return keyThucTe ? item[keyThucTe] : null;
     };
+
+    // ===== HÀM GỬI DỮ LIỆU LÊN GOOGLE SHEET ====
+    function sendDataToSheet(khachHang, maCan, giaNY, tongCK, giaSauCK) {
+        const saleInfoStr = localStorage.getItem('saleInfo');
+        let saleName = "Chưa khai báo";
+        let salePhone = "Chưa khai báo";
+        
+        if (saleInfoStr) {
+            const info = JSON.parse(saleInfoStr);
+            saleName = info.name;
+            salePhone = info.phone;
+        }
+
+        const payload = {
+            saleName: saleName,
+            salePhone: salePhone,
+            khachHang: khachHang,
+            maCan: maCan,
+            giaNiemYet: giaNY,
+            tongChietKhau: tongCK,
+            giaSauCK: giaSauCK
+        };
+
+        fetch("https://script.google.com/macros/s/AKfycby8s4LNC59rimvdIYXsDD-OnUAz_K5pcXSoMsHkgCq1v5opAVhd9Zzug_Y_0NthlklphQ/exec", {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+            body: JSON.stringify(payload)
+        }).catch(err => console.log("Lưu log sheet thất bại:", err));
+    }
 
     // ===== THUẬT TOÁN TÍNH CHIẾT KHẤU TÂN TRÀO =====
     function calculate() {
@@ -484,10 +513,7 @@
             }
         }
 
-        // TỔNG GIÁ SAU CHIẾT KHẤU CƠ BẢN
-        let tongGiaSauCK = giaDatSauCK + giaXaySauCK;
-
-        // 2. TÍNH CHIẾT KHẤU BỔ SUNG (LŨY KẾ TRÊN TỔNG GIÁ TRỊ CĂN)
+        // 2. TÍNH CHIẾT KHẤU BỔ SUNG & THỦ CÔNG (TRỪ LŨY KẾ VÀO TIỀN ĐẤT)
         if (mode === 'auto' && document.getElementById('enable-extra').checked) {
             const rows = document.querySelectorAll('#extra-body tr');
             rows.forEach((row, index) => {
@@ -497,14 +523,14 @@
 
                 if (val > 0) {
                     if (type === 'amount') {
-                        breakdown += `• CK bổ sung tiền mặt #${index + 1}: <strong style="color:#e53e3e">-${formatMoney(val)}</strong><br>`;
-                        tongGiaSauCK -= val;
+                        breakdown += `• CK bổ sung tiền mặt #${index + 1} (Trừ vào Đất): <strong style="color:#e53e3e">-${formatMoney(val)}</strong><br>`;
+                        giaDatSauCK -= val;
                     } else {
-                        let refPrice = (base === 'before-vat') ? (tongGiaSauCK / 1.1) : tongGiaSauCK;
+                        let refPrice = (base === 'before-vat') ? (giaDatSauCK / 1.1) : giaDatSauCK;
                         let extraDisc = refPrice * (val / 100);
-                        let baseText = (base === 'before-vat') ? "trên Tổng giá hiện tại (chưa VAT)" : "trên Tổng giá hiện tại (gồm VAT)";
+                        let baseText = (base === 'before-vat') ? "trên tiền Đất (chưa VAT)" : "trên tiền Đất (gồm VAT)";
                         breakdown += `• CK bổ sung #${index + 1} (${val}% ${baseText}): <strong style="color:#e53e3e">-${formatMoney(extraDisc)}</strong><br>`;
-                        tongGiaSauCK -= extraDisc;
+                        giaDatSauCK -= extraDisc;
                     }
                 }
             });
@@ -514,21 +540,21 @@
             names.forEach((n, idx) => {
                 let r = parseFloat(rates[idx].value) / 100;
                 if (r > 0) {
-                    let tienGiam = tongGiaSauCK * r;
-                    breakdown += `• ${n.value || 'Chiết khấu bổ sung'} (${rates[idx].value}% trên Tổng giá): <strong style="color:#e53e3e">-${formatMoney(tienGiam)}</strong><br>`;
-                    tongGiaSauCK -= tienGiam;
+                    let tienGiam = giaDatSauCK * r;
+                    breakdown += `• ${n.value || 'Chiết khấu bổ sung'} (${rates[idx].value}% trên tiền Đất): <strong style="color:#e53e3e">-${formatMoney(tienGiam)}</strong><br>`;
+                    giaDatSauCK -= tienGiam;
                 }
             });
         }
 
-        // Đảm bảo chia lại tỷ trọng Đất/Xây nếu có CK bổ sung để xuất bảng tiến độ khớp số
-        let ratio = tongGiaSauCK / (giaDatSauCK + giaXaySauCK);
-        let finalGiaDat = giaDatSauCK * ratio;
-        let finalGiaXay = giaXaySauCK * ratio;
+        // Không cho tiền đất âm
+        if (giaDatSauCK < 0) giaDatSauCK = 0;
 
         if (breakdown === "") breakdown = "<i>Không áp dụng mức chiết khấu nào.</i>";
 
-        tongGiaSauCK = Math.round(tongGiaSauCK / 1000) * 1000;
+        // LÀM TRÒN SỐ ĐỂ CỘNG TRÁNH LỆCH LẺ
+        giaDatSauCK = Math.round(giaDatSauCK / 1000) * 1000;
+        let tongGiaSauCK = giaDatSauCK + giaXaySauCK;
 
         document.getElementById('out-name').innerText = khachHang;
         document.getElementById('out-code').innerText = codeInput;
@@ -543,13 +569,14 @@
         document.getElementById('discount-breakdown').innerHTML = breakdown;
 
         // Render Tiến độ dựa theo Tình trạng
-        renderSchedule(status, plan, finalGiaDat, finalGiaXay, tongGiaSauCK, depositDate);
+        renderSchedule(status, plan, giaDatSauCK, giaXaySauCK, tongGiaSauCK, depositDate);
         
         document.getElementById('current-print-date').innerText = getFormattedDate(new Date());
 
         document.getElementById('result-box').style.display = 'block';
         window.scrollTo({ top: document.getElementById('result-box').offsetTop, behavior: 'smooth' });
 
+        // GỬI DATA VỀ GOOGLE SHEET 
         sendDataToSheet(khachHang, codeInput, giaTongGoc, giaTongGoc - tongGiaSauCK, tongGiaSauCK);
     }
 
@@ -673,39 +700,6 @@
             
             container.innerHTML = html;
         }
-    }
-
-    // ==== HÀM GỬI DỮ LIỆU LÊN GOOGLE SHEET ====
-    function sendDataToSheet(khachHang, maCan, giaNY, tongCK, giaSauCK) {
-        const saleInfoStr = localStorage.getItem('saleInfo');
-        let saleName = "Chưa khai báo";
-        let salePhone = "Chưa khai báo";
-        
-        if (saleInfoStr) {
-            const info = JSON.parse(saleInfoStr);
-            saleName = info.name;
-            salePhone = info.phone;
-        }
-
-        const payload = {
-            saleName: saleName,
-            salePhone: salePhone,
-            khachHang: khachHang,
-            maCan: maCan,
-            giaNiemYet: giaNY,
-            tongChietKhau: tongCK,
-            giaSauCK: giaSauCK
-        };
-
-        // Thay URL này bằng URL Apps Script mới của bạn
-        fetch("https://script.google.com/macros/s/AKfycby8s4LNC59rimvdIYXsDD-OnUAz_K5pcXSoMsHkgCq1v5opAVhd9Zzug_Y_0NthlklphQ/exec", {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
-            },
-            body: JSON.stringify(payload)
-        }).catch(err => console.log("Lưu log sheet thất bại:", err));
     }
 
     function inPhieu() {
