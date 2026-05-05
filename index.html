@@ -178,8 +178,7 @@
         </div>
         <div class="form-group">
             <label>Mã sản phẩm</label>
-            <input type="text" id="apt-code" list="apt-list" placeholder="Gõ hoặc chọn mã căn..." autocomplete="off">
-            <datalist id="apt-list"></datalist>
+            <input type="text" id="apt-code" placeholder="Ví dụ: C1.01" autocomplete="off">
         </div>
         <div class="form-group">
             <label>Ngày đặt cọc</label>
@@ -356,18 +355,26 @@
         });
     }
 
-    // ===== TỰ ĐỘNG NHẬN DIỆN "TYPE" KHI SALE ĐANG GÕ =====
+    // ===== TỰ ĐỘNG NHẬN DIỆN "TYPE" KHI SALE ĐANG GÕ THỜI GIAN THỰC =====
     document.getElementById('apt-code').addEventListener('input', function() {
         if(masterData.length === 0) return;
         const code = this.value.toUpperCase().trim();
-        const apt = findApt(code);
         const statusEl = document.getElementById('apt-status');
+        const planSelect = document.getElementById('payment-plan');
+        
+        // Trạng thái nếu người dùng lỡ tay xóa hết mã căn
+        if (code === "") {
+            planSelect.innerHTML = "<option value=''>Vui lòng nhập mã sản phẩm...</option>";
+            return;
+        }
+
+        const apt = findApt(code);
         
         if(apt) {
             let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
             let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
 
-            // Chỉ cập nhật nếu thực sự có sự thay đổi (tránh giật lag dropdown)
+            // Chỉ cập nhật dropdown nếu trạng thái thay đổi (chống lỗi giật menu)
             if (statusEl.value !== statusVal) {
                 statusEl.value = statusVal;
                 updatePaymentPlans(statusVal);
@@ -419,18 +426,6 @@
                 statusEl.innerHTML = "🟢 Kết nối dữ liệu thành công!";
                 statusEl.style.color = "green";
                 statusEl.style.background = "#f0fdf4";
-                
-                // Đổ dữ liệu vào list gợi ý
-                const datalist = document.getElementById('apt-list');
-                datalist.innerHTML = "";
-                masterData.forEach(item => {
-                    const code = String(item.ma_can || item.Ma_can || item.id || "").trim();
-                    if(code) {
-                        let opt = document.createElement('option');
-                        opt.value = code;
-                        datalist.appendChild(opt);
-                    }
-                });
 
                 updatePaymentPlans();
                 // Phục hồi form từ bộ nhớ tạm
