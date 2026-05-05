@@ -6,50 +6,82 @@
     <title>Phiếu Tính Giá Flamingo Tân Trào Heritage Onsen & Resort</title>
     <style>
         :root {
-            --plum: #8C1C31;     /* Đỏ mận */
-            --orange: #D9532B;   /* Cam gạch */
-            --gold: #E5A93A;     /* Vàng đồng */
-            --gradient: linear-gradient(135deg, var(--plum), var(--orange), var(--gold));
-            --gradient-header: linear-gradient(90deg, var(--plum), var(--orange));
+            --primary: #8B1E2D;      /* Đỏ rượu vang */
+            --secondary: #E76F51;    /* Cam đất */
+            --accent: #F4A261;       /* Cam sáng */
+            --bg-body: #f8f9fa;      /* Xám nền ngoài */
+            --bg-container: #FDF6F0; /* Nền kem nhẹ */
+            --border-line: #E5DCD5;  /* Viền nhẹ */
+            --text-main: #2D2D2D;    /* Đen mềm */
+            --text-label: #6B6B6B;   /* Xám mô tả */
+            --btn-gradient: linear-gradient(135deg, #8B1E2D, #F4A261);
+            --btn-gradient-hover: linear-gradient(135deg, #A32638, #FFB36B);
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8f9fa; color: #333; line-height: 1.6; margin: 0; padding: 20px;}
-        .container { max-width: 1200px; margin: 10px auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative;}
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; margin: 0; padding: 20px;}
+        .container { max-width: 1200px; margin: 10px auto; background: var(--bg-container); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative;}
         
-        h1 { color: var(--plum); text-transform: uppercase; margin-bottom: 5px; font-size: 26px; text-align: center;}
-        h2 { color: var(--orange); font-weight: bold; margin-top: 0; margin-bottom: 30px; font-size: 20px; text-align: center;}
+        .header-box { text-align: center; border-bottom: 2px solid var(--accent); margin-bottom: 25px; padding-bottom: 15px; }
+        h1 { color: var(--primary); text-transform: uppercase; margin-bottom: 5px; font-size: 26px; letter-spacing: 1px;}
+        h2 { color: var(--secondary); font-weight: bold; margin-top: 0; font-size: 18px; }
         
-        #data-status { font-weight: bold; margin-bottom: 25px; padding: 10px; border-radius: 6px; display: inline-block; background: #f1f5f9; text-align: center;}
+        #data-status { font-weight: bold; margin-top: 15px; padding: 8px 20px; border-radius: 20px; display: inline-block; font-size: 14px;}
+        .status-success { background: #E6F4EA; color: #2D6A4F; border: 1px solid #C3E6CB; }
+        .status-error { background: #FDE8E8; color: #C53030; border: 1px solid #FEB2B2; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px);}
-        .modal-content { background: #fff; padding: 35px 30px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .sale-greeting-box { text-align: right; margin-bottom: 10px; font-size: 14px; color: #4a5568; }
+        .modal-content { background: var(--bg-container); padding: 35px 30px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .sale-greeting-box { text-align: right; margin-bottom: 10px; font-size: 14px; color: var(--text-label); }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: left; margin-bottom: 30px; }
         .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-weight: 600; margin-bottom: 8px; color: #4a5568; }
-        .form-group input, .form-group select { padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 16px; outline: none; transition: 0.2s; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(217, 83, 43, 0.15); }
+        .form-group label { font-weight: 600; margin-bottom: 8px; color: var(--text-label); font-size: 13px; text-transform: uppercase;}
         
-        .full-width { grid-column: span 3; }
-        .mode-selector { background: #fff5f5; border: 1px dashed var(--orange); padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 30px; align-items: center; justify-content: center; }
-        .mode-selector label { cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px; color: var(--plum);}
+        .form-group input, .form-group select { 
+            padding: 12px; 
+            border: 1px solid #D6CCC2; 
+            border-radius: 6px; 
+            font-size: 15px; 
+            background: #FFFFFF;
+            outline: none; 
+            color: var(--text-main);
+            transition: all 0.2s ease; 
+        }
+        .form-group input:focus, .form-group select:focus { 
+            border-color: var(--secondary); 
+            box-shadow: 0 0 0 2px rgba(231, 111, 81, 0.2); 
+        }
         
-        .custom-discount-box { background: #fffaf0; border: 1px dashed var(--gold); padding: 20px; border-radius: 8px; margin-top: 10px; display: none; }
-        .extra-discount-container { background: #fff5f5; border: 1px dashed var(--orange); padding: 20px; border-radius: 8px; margin-top: 10px; }
-        .custom-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        .custom-table th { font-size: 14px; color: #4a5568; padding-bottom: 8px; }
-        .custom-table input, .custom-table select { width: 95%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        
-        .btn-add { background: var(--orange); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;}
-        .btn-remove { background: #e53e3e; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;}
+        .input-readonly { background-color: #F8F9FA !important; color: var(--primary) !important; font-weight: bold; cursor: not-allowed; border-style: dashed !important;}
 
-        /* Nút Tạo phiếu mang phong cách Heritage */
+        .full-width { grid-column: span 3; }
+        .mode-selector { background: #FFF4EC; border: 1px dashed var(--accent); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 30px; align-items: center; justify-content: center; }
+        .mode-selector label { cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px; color: var(--primary);}
+        
+        /* Chỉnh màu Radio button giả lập */
+        input[type="radio"] { accent-color: var(--primary); }
+
+        .custom-discount-box { background: #FFF4EC; border: 1px solid var(--accent); padding: 20px; border-radius: 8px; margin-top: 10px; display: none; }
+        .extra-discount-container { background: #FFF4EC; border: 1px solid var(--accent); padding: 20px; border-radius: 8px; margin-top: 10px; }
+        
+        .custom-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        .custom-table th { font-size: 13px; color: var(--text-label); padding-bottom: 8px; border-bottom: 1px solid var(--border-line); margin-bottom: 8px;}
+        .custom-table td { padding-top: 8px; }
+        .custom-table input, .custom-table select { width: 95%; padding: 8px; border: 1px solid #D6CCC2; border-radius: 4px; font-size: 14px; background: #fff;}
+        .custom-table input:focus, .custom-table select:focus { border-color: var(--secondary); box-shadow: 0 0 0 2px rgba(231, 111, 81, 0.2); }
+        
+        .btn-add { background: var(--secondary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s;}
+        .btn-add:hover { background: #F08A5D; }
+        
+        .btn-remove { background: #D62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .btn-remove:hover { background: #E63946; }
+
+        /* Nút Tạo phiếu chuẩn Tone */
         .btn-main { 
-            background: var(--gradient); 
+            background: var(--btn-gradient); 
             color: white; 
             border: none; 
-            padding: 15px 40px; 
+            padding: 16px 40px; 
             border-radius: 30px; 
             font-size: 18px; 
             font-weight: bold; 
@@ -59,39 +91,41 @@
             display: block; 
             margin: 20px auto; 
             min-width: 320px;
-            box-shadow: 0 4px 15px rgba(140, 28, 49, 0.3);
+            box-shadow: 0 4px 10px rgba(139, 30, 45, 0.25);
         }
         .btn-main:hover { 
-            opacity: 0.95; 
+            background: var(--btn-gradient-hover);
             transform: translateY(-2px); 
-            box-shadow: 0 6px 20px rgba(140, 28, 49, 0.5);
+            box-shadow: 0 6px 15px rgba(139, 30, 45, 0.4);
         }
 
-        .btn-print { background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .print-header-actions { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--plum); margin-bottom: 20px; padding-bottom: 10px; }
+        .btn-print { background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
         
-        #result-box { display: none; margin-top: 40px; padding-top: 30px; border-top: 2px dashed #edf2f7; text-align: left; }
-        .result-header { color: var(--plum); margin: 0; font-size: 22px; text-transform: uppercase; }
+        #result-box { display: none; margin-top: 40px; padding-top: 30px; border-top: 2px dashed var(--border-line); text-align: left; }
+        .print-header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .result-header { color: var(--primary); margin: 0; font-size: 22px; text-transform: uppercase; font-weight: bold; }
         
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .info-item { display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 5px; align-items: center;}
-        .info-item span { color: #718096; }
-        .info-item strong { color: #2d3748; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid var(--border-line);}
+        .info-item { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-line); padding-bottom: 8px; align-items: center;}
+        .info-item span { color: var(--text-label); font-size: 14px;}
+        .info-item strong { color: var(--text-main); font-size: 15px;}
         
-        .price-highlight { background: #fffaf0; padding: 20px; border-radius: 8px; border: 1px solid var(--gold); margin-bottom: 30px; }
-        .final-price { color: var(--plum); font-size: 22px; font-weight: bold; } 
-        .discount-detail { font-size: 15px; color: #4a5568; margin-top: 10px; padding-left: 20px; border-left: 3px solid var(--orange); }
+        .price-highlight { background: #FFF4EC; padding: 20px; border-radius: 8px; border: 1px solid var(--accent); margin-bottom: 30px; }
+        .final-price-container { border-top: 2px dashed var(--accent); margin-top: 20px; padding-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .final-price { color: var(--primary); font-size: 24px; font-weight: bold; } 
+        .discount-detail { font-size: 14px; color: var(--text-main); margin-top: 15px; padding-left: 15px; border-left: 3px solid var(--secondary); line-height: 1.8;}
 
-        .schedule-header { color: var(--plum); margin-top: 25px; font-size: 16px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; border-bottom: 2px solid var(--orange); display: inline-block; padding-bottom: 4px;}
-        table.schedule-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; background: #fff; }
-        .schedule-table th { background: var(--gradient-header) !important; color: white !important; padding: 10px; border: 1px solid var(--plum); text-align: center; font-size: 14px;}
-        .schedule-table td { border: 1px solid #cbd5e0; padding: 10px; vertical-align: middle; font-size: 14px;}
-        .schedule-table tr:nth-child(even) { background: #fdf8f5; }
+        .schedule-header { color: var(--primary); margin-top: 25px; font-size: 16px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;}
+        
+        table.schedule-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .schedule-table th { background: var(--primary); color: white; padding: 12px 10px; border: 1px solid var(--primary); text-align: center; font-size: 13px;}
+        .schedule-table td { border: 1px solid var(--border-line); padding: 10px; vertical-align: middle; font-size: 14px; color: var(--text-main);}
+        .schedule-table tr:nth-child(even) { background: var(--bg-container); }
         .td-center { text-align: center; }
         .td-right { text-align: right; }
 
-        .copyright-footer { text-align: right; margin-top: 20px; border-top: 1px dashed #cbd5e0; padding-top: 10px; font-size: 12px; color: #a0aec0; font-style: italic; }
-        .copyright-footer strong { color: var(--plum); font-weight: bold; font-style: normal;}
+        .copyright-footer { text-align: right; margin-top: 20px; border-top: 1px dashed var(--border-line); padding-top: 10px; font-size: 12px; color: var(--text-label); font-style: italic; }
+        .copyright-footer strong { color: var(--primary); font-weight: bold; font-style: normal;}
 
         /* CSS TỐI ƯU TRANG IN & KHÔNG GÂY LỖI MOBILE */
         @page { margin: 10mm; }
@@ -100,26 +134,27 @@
             .no-print { display: none !important; }
             * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
             body { font-size: 11px; line-height: 1.3; color: #000; background: #fff; }
-            .container { box-shadow: none; padding: 0; margin: 0; width: 100%; max-width: 100%; border: none;}
+            .container { box-shadow: none; padding: 0; margin: 0; width: 100%; max-width: 100%; border: none; background: #fff;}
             #result-box { display: block !important; margin-top: 0; padding-top: 0; border: none; }
-            #print-title-area { display: block !important; margin-bottom: 15px; }
-            h1 { font-size: 18px; margin-bottom: 2px; color: #000 !important; }
-            h2 { font-size: 14px; margin-bottom: 15px; color: #333 !important;}
-            .result-header { font-size: 15px; margin-bottom: 10px; color: #000 !important; border-bottom: 1px solid #000; }
-            .info-grid { gap: 10px; margin-bottom: 15px; }
+            .header-box { display: block !important; margin-bottom: 15px; border-bottom: 2px solid #F4A261; padding-bottom: 10px;}
+            h1 { font-size: 18px; margin-bottom: 2px; color: #8B1E2D !important; }
+            h2 { font-size: 14px; margin-bottom: 0px; color: #E76F51 !important;}
+            .result-header { font-size: 15px; margin-bottom: 10px; color: #8B1E2D !important; }
+            
+            .info-grid { gap: 10px; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; background: #fff; }
             .info-item { padding-bottom: 2px; border-bottom: 1px dotted #ccc; }
-            .price-highlight { padding: 10px 15px; margin-bottom: 15px; border: 1px solid #666; background: transparent; }
-            .schedule-header { color: #000 !important; border-bottom: 1px solid #666; font-size: 13px; margin-top: 15px;}
+            .price-highlight { padding: 10px 15px; margin-bottom: 15px; border: 1px solid #F4A261; background: #FFF4EC !important; }
+            .schedule-header { color: #8B1E2D !important; font-size: 13px; margin-top: 15px; margin-bottom: 5px;}
             table.schedule-table { margin-bottom: 10px; }
-            .schedule-table th { background: #eee !important; color: #000 !important; border-color: #666 !important; padding: 6px; font-size: 11px; }
-            .schedule-table td { padding: 6px; font-size: 11px; border-color: #666; color: #000; }
+            .schedule-table th { background: #8B1E2D !important; color: #fff !important; border-color: #8B1E2D !important; padding: 6px; font-size: 11px; }
+            .schedule-table td { padding: 6px; font-size: 11px; border-color: #ccc; color: #000; }
             tr { page-break-inside: avoid; }
             .copyright-footer { color: #666 !important; border-top: 1px solid #999; margin-top: 10px; padding-top: 5px; }
         }
 
         @media screen and (max-width: 768px) {
             body { padding: 10px; }
-            .container { padding: 20px; margin: 0; }
+            .container { padding: 15px; margin: 0; }
             h1 { font-size: 20px; }
             .form-grid { grid-template-columns: 1fr; gap: 15px; }
             .full-width { grid-column: span 1; }
@@ -135,18 +170,18 @@
 
 <div id="sales-modal" class="modal-overlay no-print">
     <div class="modal-content">
-        <h3 style="color:var(--plum); margin-top:0; font-size: 20px;">ĐĂNG NHẬP HỆ THỐNG</h3>
-        <p style="font-size:14px; color:#666; margin-bottom: 25px;">Vui lòng nhập đúng thông tin để ghi nhận báo giá.</p>
+        <h3 style="color:var(--primary); margin-top:0; font-size: 20px;">ĐĂNG NHẬP HỆ THỐNG</h3>
+        <p style="font-size:14px; color:var(--text-label); margin-bottom: 25px;">Vui lòng nhập đúng thông tin để ghi nhận báo giá.</p>
         
         <div class="form-group" style="margin-bottom: 15px; text-align:left;">
             <label>Tên chuyên viên tư vấn (*)</label>
             <input type="text" id="sale-name" placeholder="Ví dụ: Nguyễn Văn A">
-            <span style="font-size: 11px; color: #e53e3e; margin-top: 4px; font-style: italic;">* Yêu cầu nhập tên thật (Không dùng số).</span>
+            <span style="font-size: 11px; color: #D62828; margin-top: 4px; font-style: italic;">* Yêu cầu nhập tên thật (Không dùng số).</span>
         </div>
         <div class="form-group" style="margin-bottom: 25px; text-align:left;">
             <label>Số điện thoại / Mã NV (*)</label>
             <input type="text" id="sale-phone" placeholder="Ví dụ: 0987654321">
-            <span style="font-size: 11px; color: #e53e3e; margin-top: 4px; font-style: italic;">* Viết liền không dấu, độ dài 4-15 ký tự.</span>
+            <span style="font-size: 11px; color: #D62828; margin-top: 4px; font-style: italic;">* Viết liền không dấu, độ dài 4-15 ký tự.</span>
         </div>
         
         <button class="btn-main" style="margin-top:0;" onclick="saveSalesInfo()">XÁC NHẬN BẮT ĐẦU</button>
@@ -156,14 +191,14 @@
 <div class="container">
     
     <div id="sale-greeting" class="sale-greeting-box no-print" style="display:none;">
-        👤 Đang tư vấn bởi: <strong id="current-sale-name" style="color:var(--plum);">...</strong> 
-        <a href="#" onclick="logoutSales(); return false;" style="color:#e53e3e; text-decoration:none; margin-left: 10px; font-size: 13px;">(Đăng xuất)</a>
+        👤 Đang tư vấn bởi: <strong id="current-sale-name" style="color:var(--primary);">...</strong> 
+        <a href="#" onclick="logoutSales(); return false;" style="color:#D62828; text-decoration:none; margin-left: 10px; font-size: 13px;">(Đăng xuất)</a>
     </div>
 
-    <div style="text-align: center;" class="no-print">
+    <div class="header-box no-print">
         <h1>Bảng tính giá & Tiến độ thanh toán</h1>
         <h2>Flamingo Tân Trào Heritage Onsen & Resort</h2>
-        <div id="data-status">⏳ Đang tải dữ liệu sản phẩm...</div>
+        <div id="data-status" class="status-success">⏳ Đang tải dữ liệu sản phẩm...</div>
     </div>
 
     <div class="mode-selector no-print">
@@ -178,7 +213,8 @@
         </div>
         <div class="form-group">
             <label>Mã sản phẩm</label>
-            <input type="text" id="apt-code" placeholder="Ví dụ: C1.01" autocomplete="off">
+            <input type="text" id="apt-code" list="apt-list" placeholder="Gõ mã (VD: F1.01)..." autocomplete="off">
+            <datalist id="apt-list"></datalist>
         </div>
         <div class="form-group">
             <label>Ngày đặt cọc</label>
@@ -187,20 +223,19 @@
         
         <div class="form-group">
             <label>Tình trạng sản phẩm</label>
-            <select id="apt-status" onchange="updatePaymentPlans(this.value)">
-                <option value="DaXay">Đã xây dựng</option>
-                <option value="ChuaXay">Chưa xây dựng</option>
-            </select>
+            <input type="text" id="apt-status" class="input-readonly" readonly placeholder="Tự động điền theo Mã..." data-val="">
         </div>
         
         <div class="form-group" style="grid-column: span 2;">
             <label>Phương thức thanh toán</label>
-            <select id="payment-plan"></select>
+            <select id="payment-plan">
+                <option value="">Vui lòng nhập mã sản phẩm hợp lệ...</option>
+            </select>
         </div>
 
         <div class="form-group full-width no-print" id="auto-extra-discount-box">
             <div class="extra-discount-container">
-                <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; color: var(--plum);">
+                <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; color: var(--primary);">
                     <input type="checkbox" id="enable-extra" onchange="toggleExtraDetails()" style="width: 20px; height: 20px;">
                     <strong>Áp dụng chiết khấu bổ sung (Tính lũy kế trên Tiền Đất)</strong>
                 </label>
@@ -209,7 +244,7 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th>Loại</th>
+                                <th>Loại chiết khấu</th>
                                 <th>Mốc áp dụng</th>
                                 <th>Giá trị (% hoặc tiền)</th>
                                 <th></th>
@@ -241,7 +276,7 @@
     </div>
 
     <div id="custom-discount-box" class="custom-discount-box no-print">
-        <label style="font-weight: bold; color: var(--orange);">Nhập thủ công các mục chiết khấu (Tính lũy kế trên Tiền Đất):</label>
+        <label style="font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: inline-block;">Nhập thủ công các mục chiết khấu (Tính lũy kế trên Tiền Đất):</label>
         <table class="custom-table">
             <thead><tr><th style="text-align: left;">Nội dung/Lý do</th><th style="text-align: left;">Tỷ lệ (%)</th><th></th></tr></thead>
             <tbody id="custom-body">
@@ -258,7 +293,7 @@
     <button class="btn-main no-print" onclick="calculate()">TẠO PHIẾU TÍNH GIÁ</button>
 
     <div id="result-box">
-        <div style="text-align: center; display: none; margin-bottom: 30px;" id="print-title-area">
+        <div class="header-box" style="display: none;" id="print-title-area">
             <h1>Bảng tính giá & Tiến độ thanh toán</h1>
             <h2>Flamingo Tân Trào Heritage Onsen & Resort</h2>
         </div>
@@ -280,21 +315,21 @@
         <div class="price-highlight">
             <div class="info-item" style="border:none; padding-bottom: 0;"><span>Giá trị Đất (gồm VAT):</span> <strong id="out-price-land"></strong></div>
             <div class="info-item" style="border:none; padding-bottom: 0;"><span>Giá trị Xây dựng (gồm VAT):</span> <strong id="out-price-build"></strong></div>
-            <div class="info-item" style="border:none; padding-bottom: 0;"><span>Tổng giá niêm yết:</span> <strong id="out-price-raw" style="font-size: 18px; color: var(--plum)"></strong></div>
+            <div class="info-item" style="border:none; padding-bottom: 0; margin-top: 5px;"><span>Tổng giá niêm yết:</span> <strong id="out-price-raw" style="font-size: 18px; color: var(--primary)"></strong></div>
             
-            <div style="margin-top: 15px; margin-bottom: 5px; font-weight: bold; color: #2d3748;">Chi tiết áp dụng chiết khấu (Được trừ trực tiếp vào Tiền Đất):</div>
+            <div style="margin-top: 20px; font-weight: bold; color: var(--text-main);">Chi tiết áp dụng chiết khấu (Được trừ trực tiếp vào Tiền Đất):</div>
             <div id="discount-breakdown" class="discount-detail"></div>
             
-            <div class="info-item final-price-container" style="border:none; margin-top: 20px; border-top: 2px dashed var(--gold); padding-top: 15px; align-items: center;">
-                <span style="font-size: 18px; color: #333; font-weight: bold;">TỔNG GIÁ SAU CHIẾT KHẤU:</span>
+            <div class="final-price-container">
+                <span style="font-size: 18px; color: var(--text-main); font-weight: bold;">TỔNG GIÁ SAU CHIẾT KHẤU:</span>
                 <span class="final-price" id="out-price-final"></span>
             </div>
         </div>
 
-        <h3 style="color: var(--plum); margin-bottom: 10px; font-size: 18px; text-transform: uppercase;">Tiến độ thanh toán chi tiết</h3>
+        <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 18px; text-transform: uppercase;">Tiến độ thanh toán chi tiết</h3>
         <div id="schedule-content"></div>
 
-        <div style="margin-top: 30px; text-align: right; font-style: italic; color: #666; font-size: 14px;">
+        <div style="margin-top: 30px; text-align: right; color: var(--text-label); font-size: 13px;">
             Ngày xuất phiếu: <span id="current-print-date"></span>
         </div>
 
@@ -362,29 +397,29 @@
         const statusEl = document.getElementById('apt-status');
         const planSelect = document.getElementById('payment-plan');
         
-        // Trạng thái nếu người dùng lỡ tay xóa hết mã căn
-        if (code === "") {
+        // Nếu xoá trắng ô mã căn hoặc gõ không khớp mã nào
+        const apt = findApt(code);
+        if (!apt) {
+            statusEl.value = "Chờ nhập mã hợp lệ...";
+            statusEl.setAttribute('data-val', "");
             planSelect.innerHTML = "<option value=''>Vui lòng nhập mã sản phẩm...</option>";
             return;
         }
-
-        const apt = findApt(code);
         
-        if(apt) {
-            let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
-            let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
+        // Nếu khớp mã, tự động điền Status và Update Options
+        let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
+        let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
+        let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
 
-            // Chỉ cập nhật dropdown nếu trạng thái thay đổi (chống lỗi giật menu)
-            if (statusEl.value !== statusVal) {
-                statusEl.value = statusVal;
-                updatePaymentPlans(statusVal);
-            }
+        if (statusEl.getAttribute('data-val') !== statusVal) {
+            statusEl.value = statusText;
+            statusEl.setAttribute('data-val', statusVal);
+            updatePaymentPlans(statusVal);
         }
     });
 
     // ===== MENU PHƯƠNG THỨC THANH TOÁN ĐỘNG =====
     function updatePaymentPlans(status) {
-        if (!status) status = document.getElementById('apt-status').value;
         const planSelect = document.getElementById('payment-plan');
         const currentPlan = planSelect.value;
         
@@ -399,7 +434,6 @@
             planSelect.innerHTML += `<option value="30">Thanh toán sớm tiền Đất 30 ngày (CK 7% trên tiền Đất)</option>`;
         }
 
-        // Cố gắng giữ lại tùy chọn cũ nếu nó tồn tại trong danh sách mới
         if(currentPlan) {
             const exists = Array.from(planSelect.options).some(opt => opt.value === currentPlan);
             if(exists) planSelect.value = currentPlan;
@@ -423,18 +457,28 @@
             .then(data => {
                 masterData = Array.isArray(data) ? data : data[Object.keys(data)[0]];
                 if (!masterData || masterData.length === 0) throw new Error("Rỗng");
-                statusEl.innerHTML = "🟢 Kết nối dữ liệu thành công!";
-                statusEl.style.color = "green";
-                statusEl.style.background = "#f0fdf4";
+                
+                statusEl.innerHTML = "✓ Dữ liệu đã sẵn sàng!";
+                statusEl.className = "status-success";
+                
+                // Đổ list gợi ý mã căn
+                const datalist = document.getElementById('apt-list');
+                datalist.innerHTML = "";
+                masterData.forEach(item => {
+                    const code = String(item.ma_can || item.Ma_can || item.id || "").trim();
+                    if(code) {
+                        let opt = document.createElement('option');
+                        opt.value = code;
+                        datalist.appendChild(opt);
+                    }
+                });
 
-                updatePaymentPlans();
-                // Phục hồi form từ bộ nhớ tạm
+                // Phục hồi form
                 restoreFormState();
             })
             .catch(err => {
-                statusEl.innerHTML = "🔴 Lỗi kết nối Data.json! Vui lòng mở qua GitHub Pages.";
-                statusEl.style.color = "red";
-                statusEl.style.background = "#fef2f2";
+                statusEl.innerHTML = "⚠️ Lỗi: Không thể kết nối dữ liệu Data.json";
+                statusEl.className = "status-error";
             });
     }
 
@@ -447,15 +491,17 @@
                 
                 if(state.aptCode) {
                     document.getElementById('apt-code').value = state.aptCode;
-                }
-
-                if(state.status) {
-                    document.getElementById('apt-status').value = state.status;
-                    updatePaymentPlans(state.status);
+                    // Trigger validation
+                    document.getElementById('apt-code').dispatchEvent(new Event('input'));
                 }
 
                 if(state.plan) {
-                    document.getElementById('payment-plan').value = state.plan;
+                    // Cần delay nhẹ xíu để đợi Datalist và input event update xong status
+                    setTimeout(() => {
+                        const planSelect = document.getElementById('payment-plan');
+                        const exists = Array.from(planSelect.options).some(opt => opt.value === state.plan);
+                        if(exists) planSelect.value = state.plan;
+                    }, 50);
                 }
 
                 if (state.depositDate) document.getElementById('deposit-date').value = state.depositDate;
@@ -494,8 +540,10 @@
                     });
                 }
 
-                // Tự động render bảng kết quả (không bắn sheet lần 2)
-                if (state.aptCode) calculate(true);
+                // Render bảng kết quả (không bắn sheet lần 2)
+                setTimeout(() => {
+                    if (state.aptCode && document.getElementById('apt-status').getAttribute('data-val')) calculate(true);
+                }, 100);
 
             } catch (e) {
                 console.error("Lỗi phục hồi form:", e);
@@ -611,16 +659,18 @@
     function calculate(isAutoRestore = false) {
         const codeInput = document.getElementById('apt-code').value.toUpperCase().trim();
         const depositDate = document.getElementById('deposit-date').value;
-        const khachHang = document.getElementById('fullname').value || "Khách lẻ";
+        const khachHang = document.getElementById('fullname').value || "Khách hàng";
         
         if (masterData.length === 0) return alert("Hệ thống chưa tải xong dữ liệu!");
         if (!codeInput) return alert("Vui lòng nhập mã sản phẩm!");
         if (!depositDate) return alert("Vui lòng chọn Ngày đặt cọc!");
 
         const apt = findApt(codeInput);
-        if (!apt) return alert("Không tìm thấy mã sản phẩm: " + codeInput);
+        if (!apt) return alert("Không tìm thấy mã sản phẩm hợp lệ!");
 
-        const status = document.getElementById('apt-status').value;
+        const status = document.getElementById('apt-status').getAttribute('data-val');
+        if (!status) return alert("Vui lòng nhập mã sản phẩm hợp lệ để phần mềm nhận diện tình trạng!");
+
         const mode = document.querySelector('input[name="calc-mode"]:checked').value;
         const plan = document.getElementById('payment-plan').value;
 
@@ -629,7 +679,6 @@
             fullname: khachHang,
             aptCode: codeInput,
             depositDate: depositDate,
-            status: status,
             plan: plan,
             mode: mode,
             enableExtra: document.getElementById('enable-extra').checked,
@@ -661,17 +710,17 @@
             if (status === 'DaXay') {
                 if (plan === '12') {
                     let giamDat = giaDat * 0.095;
-                    breakdown += `• CK 9.5% Tiến độ 12T (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--plum)">-${formatMoney(giamDat)}</strong><br>`;
+                    breakdown += `• CK 9.5% Tiến độ 12T (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--primary)">-${formatMoney(giamDat)}</strong><br>`;
                     giaDatSauCK -= giamDat;
                 } else if (plan === '30') {
                     let giamDat = giaDat * 0.15;
-                    breakdown += `• CK 15% Thanh toán sớm (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--plum)">-${formatMoney(giamDat)}</strong><br>`;
+                    breakdown += `• CK 15% Thanh toán sớm (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--primary)">-${formatMoney(giamDat)}</strong><br>`;
                     giaDatSauCK -= giamDat;
                 }
             } else if (status === 'ChuaXay') {
                 if (plan === '30') {
                     let giamDat = giaDat * 0.07;
-                    breakdown += `• CK 7% Thanh toán sớm tiền Đất (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--plum)">-${formatMoney(giamDat)}</strong><br>`;
+                    breakdown += `• CK 7% Thanh toán sớm tiền Đất (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--primary)">-${formatMoney(giamDat)}</strong><br>`;
                     giaDatSauCK -= giamDat;
                 }
             }
@@ -687,13 +736,13 @@
 
                 if (val > 0) {
                     if (type === 'amount') {
-                        breakdown += `• CK bổ sung tiền mặt #${index + 1} (Trừ vào Đất): <strong style="color:var(--plum)">-${formatMoney(val)}</strong><br>`;
+                        breakdown += `• CK bổ sung tiền mặt #${index + 1} (Trừ vào Đất): <strong style="color:var(--primary)">-${formatMoney(val)}</strong><br>`;
                         giaDatSauCK -= val;
                     } else {
                         let refPrice = (base === 'before-vat') ? (giaDatSauCK / 1.1) : giaDatSauCK;
                         let extraDisc = refPrice * (val / 100);
                         let baseText = (base === 'before-vat') ? "trên tiền Đất (chưa VAT)" : "trên tiền Đất (gồm VAT)";
-                        breakdown += `• CK bổ sung #${index + 1} (${val}% ${baseText}): <strong style="color:var(--plum)">-${formatMoney(extraDisc)}</strong><br>`;
+                        breakdown += `• CK bổ sung #${index + 1} (${val}% ${baseText}): <strong style="color:var(--primary)">-${formatMoney(extraDisc)}</strong><br>`;
                         giaDatSauCK -= extraDisc;
                     }
                 }
@@ -705,17 +754,15 @@
                 let r = parseFloat(rates[idx].value) / 100;
                 if (r > 0) {
                     let tienGiam = giaDatSauCK * r;
-                    breakdown += `• ${n.value || 'Chiết khấu bổ sung'} (${rates[idx].value}% trên tiền Đất): <strong style="color:var(--plum)">-${formatMoney(tienGiam)}</strong><br>`;
+                    breakdown += `• ${n.value || 'Chiết khấu bổ sung'} (${rates[idx].value}% trên tiền Đất): <strong style="color:var(--primary)">-${formatMoney(tienGiam)}</strong><br>`;
                     giaDatSauCK -= tienGiam;
                 }
             });
         }
 
-        // Không cho tiền đất âm
         if (giaDatSauCK < 0) giaDatSauCK = 0;
         if (breakdown === "") breakdown = "<i>Không áp dụng mức chiết khấu nào.</i>";
 
-        // LÀM TRÒN SỐ ĐỂ CỘNG TRÁNH LỆCH LẺ
         giaDatSauCK = Math.round(giaDatSauCK / 1000) * 1000;
         let tongGiaSauCK = giaDatSauCK + giaXaySauCK;
 
@@ -731,7 +778,6 @@
         document.getElementById('out-price-final').innerText = formatMoney(tongGiaSauCK);
         document.getElementById('discount-breakdown').innerHTML = breakdown;
 
-        // Render Tiến độ dựa theo Tình trạng
         renderSchedule(status, plan, giaDatSauCK, giaXaySauCK, tongGiaSauCK, depositDate);
         
         document.getElementById('current-print-date').innerText = getFormattedDate(new Date());
@@ -784,18 +830,19 @@
                 ];
             }
 
-            let html = `<table class="schedule-table">
+            let html = `<div class="schedule-header">TIẾN ĐỘ THANH TOÁN (SẢN PHẨM ĐÃ XÂY DỰNG)</div>
+                <table class="schedule-table">
                 <tr><th style="width: 35%;">Tiến độ thanh toán HĐMB</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>
-                <tr style="background: #fdf8f5;"><td><strong>Đặt cọc</strong></td><td class="td-center">-</td><td class="td-center"><strong style="color: var(--orange);">${getFormattedDate(new Date(depositDateStr))}</strong></td><td class="td-center">-</td><td class="td-right"><strong style="color:var(--orange)">${formatMoney(deposit)}</strong></td></tr>`;
+                <tr><td><strong>Đặt cọc</strong></td><td class="td-center">-</td><td class="td-center"><strong style="color: var(--secondary);">${getFormattedDate(new Date(depositDateStr))}</strong></td><td class="td-center">-</td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(deposit)}</strong></td></tr>`;
             
             steps.forEach((s, i) => {
                 let amount = Math.round((tongGiaSauCK * s.p) / 1000) * 1000;
-                let note = (i === 0) ? `<br><div style="font-size: 12px; color: #666; margin-top: 5px;">(Đã bao gồm 50tr cọc.<br>Nộp thêm: <b>${formatMoney(amount - deposit)}</b>)</div>` : "";
+                let note = (i === 0) ? `<br><div style="font-size: 12px; color: var(--text-label); margin-top: 5px;">(Đã bao gồm 50tr cọc.<br>Nộp thêm: <b>${formatMoney(amount - deposit)}</b>)</div>` : "";
                 let dateStr = (s.daysFromT === null) ? "Theo TB" : calculateDate(hdmbObj, s.daysFromT);
 
-                html += `<tr><td style="text-align: justify;">${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: #2b6cb0;"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong>${note}</td></tr>`;
+                html += `<tr><td style="text-align: justify;">${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong>${note}</td></tr>`;
             });
-            html += `<tr style="background: #fff5f5;"><td colspan="3" class="td-right"><strong>Tổng cộng:</strong></td><td class="td-center"><strong>100%</strong></td><td class="td-right"><strong style="color:var(--plum); font-size: 18px;">${formatMoney(tongGiaSauCK)}</strong></td></tr></table>`;
+            html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Tổng cộng:</strong></td><td class="td-center"><strong>100%</strong></td><td class="td-right"><strong style="color:var(--primary); font-size: 18px;">${formatMoney(tongGiaSauCK)}</strong></td></tr></table>`;
             container.innerHTML = html;
         } 
         
@@ -826,17 +873,17 @@
             // BẢNG 1: ĐẤT
             let html = `<div class="schedule-header">1. TIẾN ĐỘ THANH TOÁN GIÁ TRỊ QUYỀN SỬ DỤNG ĐẤT (95%)</div>`;
             html += `<table class="schedule-table"><tr><th style="width: 35%;">Tiến độ HĐMB Đất</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>`;
-            html += `<tr style="background: #fdf8f5;"><td><strong>Đặt cọc</strong></td><td class="td-center">-</td><td class="td-center"><strong style="color: var(--orange);">${getFormattedDate(new Date(depositDateStr))}</strong></td><td class="td-center">-</td><td class="td-right"><strong style="color:var(--orange)">${formatMoney(deposit)}</strong></td></tr>`;
+            html += `<tr><td><strong>Đặt cọc</strong></td><td class="td-center">-</td><td class="td-center"><strong style="color: var(--secondary);">${getFormattedDate(new Date(depositDateStr))}</strong></td><td class="td-center">-</td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(deposit)}</strong></td></tr>`;
             
             let totalLandPaid = 0;
             landSteps.forEach((s, i) => {
                 let amount = Math.round((finalGiaDat * s.p) / 1000) * 1000;
                 totalLandPaid += amount;
-                let note = (i === 0) ? `<br><div style="font-size: 12px; color: #666; margin-top: 5px;">(Đã bao gồm 50tr cọc.<br>Nộp thêm: <b>${formatMoney(amount - deposit)}</b>)</div>` : "";
+                let note = (i === 0) ? `<br><div style="font-size: 12px; color: var(--text-label); margin-top: 5px;">(Đã bao gồm 50tr cọc.<br>Nộp thêm: <b>${formatMoney(amount - deposit)}</b>)</div>` : "";
                 let dateStr = calculateDate(hdmbObj, s.daysFromT);
-                html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: #2b6cb0;"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong>${note}</td></tr>`;
+                html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong>${note}</td></tr>`;
             });
-            html += `<tr style="background: #fff5f5;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Đất 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--plum);">${formatMoney(totalLandPaid)}</strong></td></tr></table>`;
+            html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Đất 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--primary);">${formatMoney(totalLandPaid)}</strong></td></tr></table>`;
 
             // BẢNG 2: XÂY
             html += `<div class="schedule-header">2. TIẾN ĐỘ THANH TOÁN GIÁ TRỊ XÂY DỰNG (95%)</div>`;
@@ -848,18 +895,18 @@
                 totalBuildPaid += amount;
                 // Giả định T_XD bắt đầu cùng ngày HĐMB để minh họa
                 let dateStr = calculateDate(hdmbObj, s.daysFromT);
-                html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: #2b6cb0;"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong></td></tr>`;
+                html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong></td></tr>`;
             });
-            html += `<tr style="background: #fff5f5;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Xây 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--plum);">${formatMoney(totalBuildPaid)}</strong></td></tr></table>`;
+            html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Xây 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--primary);">${formatMoney(totalBuildPaid)}</strong></td></tr></table>`;
 
             // ĐỢT CUỐI: 5% TỔNG
             let final5Percent = tongGiaSauCK - totalLandPaid - totalBuildPaid; // Dùng phép trừ để tránh lệch số lẻ làm tròn
             html += `<div class="schedule-header">3. THANH TOÁN ĐỢT CUỐI (5% TỔNG GIÁ TRỊ CĂN)</div>`;
             html += `<table class="schedule-table"><tr><th style="width: 35%;">Tiến độ Bàn giao GCN</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>`;
-            html += `<tr><td>Lần 4_HĐMB (Giá trị QSD đất + Giá trị XD)<br><i>(Theo thông báo nhận GCN của CĐT)</i></td><td class="td-center">Theo TB</td><td class="td-center" style="color: #2b6cb0;"><strong>Theo TB</strong></td><td class="td-center"><strong>5%</strong></td><td class="td-right"><strong style="color:var(--orange)">${formatMoney(final5Percent)}</strong></td></tr></table>`;
+            html += `<tr><td>Lần 4_HĐMB (Giá trị QSD đất + Giá trị XD)<br><i>(Theo thông báo nhận GCN của CĐT)</i></td><td class="td-center">Theo TB</td><td class="td-center" style="color: var(--primary);"><strong>Theo TB</strong></td><td class="td-center"><strong>5%</strong></td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(final5Percent)}</strong></td></tr></table>`;
             
             // TỔNG KẾT TOÀN BỘ
-            html += `<table class="schedule-table"><tr style="background: #fff5f5; border: 2px solid var(--plum);"><td colspan="3" class="td-right" style="border:none; padding-right:15px; font-size:16px; color: var(--plum);"><strong>TỔNG GIÁ TRỊ CẦN THANH TOÁN:</strong></td><td class="td-center" style="border:none; color: var(--plum);"><strong>100%</strong></td><td class="td-right" style="border:none;"><strong style="color:var(--plum); font-size: 20px;">${formatMoney(tongGiaSauCK)}</strong></td></tr></table>`;
+            html += `<table class="schedule-table"><tr style="background: #FFF4EC; border-top: 2px solid var(--primary);"><td colspan="3" class="td-right" style="border:none; padding-right:15px; font-size:16px; color: var(--text-main);"><strong>TỔNG GIÁ TRỊ CẦN THANH TOÁN:</strong></td><td class="td-center" style="border:none; color: var(--text-main);"><strong>100%</strong></td><td class="td-right" style="border:none;"><strong style="color:var(--primary); font-size: 20px;">${formatMoney(tongGiaSauCK)}</strong></td></tr></table>`;
             
             container.innerHTML = html;
         }
