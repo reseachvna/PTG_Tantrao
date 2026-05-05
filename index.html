@@ -322,7 +322,6 @@
             </div>
         </div>
 
-        <h3 style="color: var(--primary); margin-bottom: 15px; font-size: 18px; text-transform: uppercase;">Tiến độ thanh toán chi tiết</h3>
         <div id="schedule-content"></div>
 
         <div style="margin-top: 30px; text-align: right; color: var(--text-label); font-size: 13px;">
@@ -401,7 +400,6 @@
         const statusEl = document.getElementById('apt-status');
         const planSelect = document.getElementById('payment-plan');
         
-        // Nếu xóa trắng ô mã căn
         if (code === "") {
             statusEl.value = "Chờ nhập mã hợp lệ...";
             statusEl.setAttribute('data-val', "");
@@ -411,12 +409,8 @@
 
         const apt = findApt(code);
         
-        // Nếu khớp đúng mã
         if(apt) {
-            // Quét dữ liệu Type và gọt khoảng trắng thừa từ JSON (ví dụ " FALSE ")
             let typeRaw = String(layGiaTriCot(apt, "Type") || "").toUpperCase().trim();
-            
-            // Logic: False = Chưa Xây, True = Đã Xây
             let statusVal = (typeRaw === "FALSE") ? "ChuaXay" : "DaXay";
             let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
 
@@ -426,7 +420,6 @@
                 updatePaymentPlans(statusVal);
             }
         } else {
-            // Nếu mã sai / chưa gõ xong
             statusEl.value = "Mã không tồn tại...";
             statusEl.setAttribute('data-val', "");
             planSelect.innerHTML = "<option value=''>Mã sản phẩm không tồn tại...</option>";
@@ -464,7 +457,6 @@
         document.getElementById('deposit-date').valueAsDate = today;
         document.getElementById('current-print-date').innerText = getFormattedDate(today);
 
-        // Chặn cache trình duyệt
         const nocacheUrl = 'Data.json?v=' + new Date().getTime();
         
         fetch(nocacheUrl)
@@ -479,7 +471,6 @@
                 statusEl.innerHTML = "✓ Dữ liệu đã sẵn sàng!";
                 statusEl.className = "status-success";
 
-                // Phục hồi form từ bộ nhớ tạm
                 restoreFormState();
             })
             .catch(err => {
@@ -498,11 +489,9 @@
                 
                 if(state.aptCode) {
                     document.getElementById('apt-code').value = state.aptCode;
-                    // Kích hoạt quét JSON tự động
                     document.getElementById('apt-code').dispatchEvent(new Event('input'));
                 }
 
-                // Chờ DOM update status xong thì gán lại phương thức thanh toán cũ
                 setTimeout(() => {
                     if(state.plan) {
                         const planSelect = document.getElementById('payment-plan');
@@ -547,7 +536,6 @@
                     });
                 }
 
-                // Tự động render bảng kết quả (không bắn sheet lần 2)
                 setTimeout(() => {
                     if (state.aptCode && document.getElementById('apt-status').getAttribute('data-val')) calculate(true);
                 }, 100);
@@ -682,6 +670,7 @@
             fullname: khachHang,
             aptCode: codeInput,
             depositDate: depositDate,
+            status: status,
             plan: plan,
             mode: mode,
             enableExtra: document.getElementById('enable-extra').checked,
@@ -865,10 +854,14 @@
                 ];
             }
 
+            // TÍNH MỐC THỜI GIAN THU TIỀN XÂY DỰNG: Ký HĐMB + 9 tháng
+            let tXD_Obj = new Date(hdmbObj);
+            tXD_Obj.setMonth(tXD_Obj.getMonth() + 9);
+
             let buildSteps = [
-                {d: "Lần 1_Giá trị XD (Khi CĐT TB thi công)", t: "T_XD", daysFromT: 0, p: 0.30},
-                {d: "Lần 2_Giá trị XD", t: "T_XD+90", daysFromT: 90, p: 0.15},
-                {d: "Lần 3_Giá trị XD (Thông báo bàn giao)", t: "T_XD+180", daysFromT: 180, p: 0.50}
+                {d: "Lần 1_Giá trị XD<br><i style='color:var(--text-label); font-size:12px; font-weight:normal;'>(Tạm tính thời gian thu tiền XD)</i>", t: "T + 9 tháng", exactDate: tXD_Obj, p: 0.30},
+                {d: "Lần 2_Giá trị XD", t: "Lần 1 XD + 90 ngày", exactDate: new Date(tXD_Obj.getTime() + 90 * 24 * 60 * 60 * 1000), p: 0.15},
+                {d: "Lần 3_Giá trị XD (Thông báo bàn giao)", t: "Lần 1 XD + 180 ngày", exactDate: new Date(tXD_Obj.getTime() + 180 * 24 * 60 * 60 * 1000), p: 0.50}
             ];
 
             // BẢNG 1: ĐẤT
@@ -894,7 +887,7 @@
             buildSteps.forEach((s) => {
                 let amount = Math.round((finalGiaXay * s.p) / 1000) * 1000;
                 totalBuildPaid += amount;
-                let dateStr = calculateDate(hdmbObj, s.daysFromT);
+                let dateStr = getFormattedDate(s.exactDate);
                 html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong></td></tr>`;
             });
             html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Xây 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--primary);">${formatMoney(totalBuildPaid)}</strong></td></tr></table>`;
