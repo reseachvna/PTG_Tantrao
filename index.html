@@ -376,7 +376,13 @@
         }
     }
 
-    // ===== TÌM CĂN THEO MÃ CĂN (ĐÃ XỬ LÝ KHOẢNG TRẮNG CỦA JSON) =====
+    // ===== HÀM TÌM KEY BẤT CHẤP VIẾT HOA/THƯỜNG =====
+    const layGiaTriCot = (item, tenCotCanTim) => {
+        const keyThucTe = Object.keys(item).find(k => k.trim().toLowerCase() === tenCotCanTim.toLowerCase());
+        return keyThucTe ? item[keyThucTe] : null;
+    };
+
+    // ===== TÌM CĂN THEO MÃ CĂN =====
     function findApt(code) {
         if(!code) return null;
         const cleanInputCode = code.toUpperCase().trim();
@@ -405,8 +411,12 @@
         
         // Nếu khớp đúng mã
         if(apt) {
-            let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
-            let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
+            // Fix lỗi khoảng trắng và Unicode tiếng Việt
+            let typeRaw = String(layGiaTriCot(apt, "Type") || layGiaTriCot(apt, "type") || "").trim().toLowerCase();
+            let typeClean = typeRaw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+            
+            // So sánh chuỗi đã lược bỏ dấu
+            let statusVal = typeClean.includes("chua") ? "ChuaXay" : "DaXay";
             let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
 
             if (statusEl.getAttribute('data-val') !== statusVal) {
@@ -453,7 +463,10 @@
         document.getElementById('deposit-date').valueAsDate = today;
         document.getElementById('current-print-date').innerText = getFormattedDate(today);
 
-        fetch('Data.json')
+        // THÊM CACHE-BUSTER: Ép trình duyệt tải file JSON mới nhất
+        const nocacheUrl = 'Data.json?v=' + new Date().getTime();
+        
+        fetch(nocacheUrl)
             .then(res => {
                 if (!res.ok) throw new Error("Lỗi " + res.status);
                 return res.json();
@@ -609,11 +622,6 @@
         d.setDate(d.getDate() + daysToAdd);
         return getFormattedDate(d);
     }
-
-    const layGiaTriCot = (item, tenCotCanTim) => {
-        const keyThucTe = Object.keys(item).find(k => k.trim().toLowerCase() === tenCotCanTim.toLowerCase());
-        return keyThucTe ? item[keyThucTe] : null;
-    };
 
     // ===== HÀM GỬI DỮ LIỆU LÊN GOOGLE SHEET ====
     function sendDataToSheet(khachHang, maCan, giaNY, tongCK, giaSauCK) {
