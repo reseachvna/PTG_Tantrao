@@ -376,13 +376,15 @@
         }
     }
 
-    // ===== HÀM TÌM KEY BẤT CHẤP VIẾT HOA/THƯỜNG =====
+    // ===== HÀM TÌM KEY JSON LINH HOẠT =====
     const layGiaTriCot = (item, tenCotCanTim) => {
-        const keyThucTe = Object.keys(item).find(k => k.trim().toLowerCase() === tenCotCanTim.toLowerCase());
-        return keyThucTe ? item[keyThucTe] : null;
+        if (!item) return null;
+        const cleanTarget = tenCotCanTim.trim().toLowerCase();
+        const foundKey = Object.keys(item).find(k => k.trim().toLowerCase() === cleanTarget);
+        return foundKey ? item[foundKey] : null;
     };
 
-    // ===== TÌM CĂN THEO MÃ CĂN =====
+    // ===== TÌM CĂN THEO MÃ CĂN CHÍNH XÁC =====
     function findApt(code) {
         if(!code) return null;
         const cleanInputCode = code.toUpperCase().trim();
@@ -411,13 +413,12 @@
         
         // Nếu khớp đúng mã
         if(apt) {
-            // Fix lỗi khoảng trắng và Unicode tiếng Việt
-            let typeRaw = String(layGiaTriCot(apt, "Type") || layGiaTriCot(apt, "type") || "").trim().toLowerCase();
-            let typeClean = typeRaw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+            // FIX LỖI TẠI ĐÂY: Chỉ dùng contains chuỗi cơ bản, tuyệt đối không dùng normalize
+            let typeRaw = String(layGiaTriCot(apt, "Type") || "").toLowerCase();
+            let isChuaXay = typeRaw.includes("chưa") || typeRaw.includes("chua");
             
-            // So sánh chuỗi đã lược bỏ dấu
-            let statusVal = typeClean.includes("chua") ? "ChuaXay" : "DaXay";
-            let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
+            let statusVal = isChuaXay ? "ChuaXay" : "DaXay";
+            let statusText = isChuaXay ? "Chưa xây dựng" : "Đã xây dựng";
 
             if (statusEl.getAttribute('data-val') !== statusVal) {
                 statusEl.value = statusText;
@@ -463,7 +464,7 @@
         document.getElementById('deposit-date').valueAsDate = today;
         document.getElementById('current-print-date').innerText = getFormattedDate(today);
 
-        // THÊM CACHE-BUSTER: Ép trình duyệt tải file JSON mới nhất
+        // Chặn cache trình duyệt
         const nocacheUrl = 'Data.json?v=' + new Date().getTime();
         
         fetch(nocacheUrl)
@@ -487,6 +488,7 @@
             });
     }
 
+    // ===== PHỤC HỒI FORM THÔNG MINH =====
     function restoreFormState() {
         const stateStr = sessionStorage.getItem('tantrao_form_state');
         if (stateStr) {
@@ -496,18 +498,18 @@
                 
                 if(state.aptCode) {
                     document.getElementById('apt-code').value = state.aptCode;
-                    // Trigger input event để quét lại json tự động
+                    // Kích hoạt quét JSON tự động
                     document.getElementById('apt-code').dispatchEvent(new Event('input'));
                 }
 
-                if(state.plan) {
-                    // Delay nhẹ để input event phía trên xử lý DOM xong
-                    setTimeout(() => {
+                // Chờ DOM update status xong thì gán lại phương thức thanh toán cũ
+                setTimeout(() => {
+                    if(state.plan) {
                         const planSelect = document.getElementById('payment-plan');
                         const exists = Array.from(planSelect.options).some(opt => opt.value === state.plan);
                         if(exists) planSelect.value = state.plan;
-                    }, 50);
-                }
+                    }
+                }, 50);
 
                 if (state.depositDate) document.getElementById('deposit-date').value = state.depositDate;
                 
@@ -545,7 +547,7 @@
                     });
                 }
 
-                // Render bảng kết quả (không bắn sheet lần 2)
+                // Tự động render bảng kết quả (không bắn sheet lần 2)
                 setTimeout(() => {
                     if (state.aptCode && document.getElementById('apt-status').getAttribute('data-val')) calculate(true);
                 }, 100);
@@ -680,6 +682,7 @@
             fullname: khachHang,
             aptCode: codeInput,
             depositDate: depositDate,
+            status: status,
             plan: plan,
             mode: mode,
             enableExtra: document.getElementById('enable-extra').checked,
