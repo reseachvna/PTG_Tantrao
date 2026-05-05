@@ -31,8 +31,6 @@
         .form-group input, .form-group select { padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 16px; outline: none; transition: 0.2s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(217, 83, 43, 0.15); }
         
-        .input-readonly { background-color: #f1f5f9; color: var(--plum); font-weight: bold; border: 1px dashed #cbd5e0 !important; cursor: not-allowed; }
-
         .full-width { grid-column: span 3; }
         .mode-selector { background: #fff5f5; border: 1px dashed var(--orange); padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 30px; align-items: center; justify-content: center; }
         .mode-selector label { cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px; color: var(--plum);}
@@ -180,7 +178,8 @@
         </div>
         <div class="form-group">
             <label>Mã sản phẩm</label>
-            <input type="text" id="apt-code" placeholder="Gõ mã (VD: F1.01) rồi click ra ngoài..." autocomplete="off">
+            <input type="text" id="apt-code" list="apt-list" placeholder="Gõ hoặc chọn mã căn..." autocomplete="off">
+            <datalist id="apt-list"></datalist>
         </div>
         <div class="form-group">
             <label>Ngày đặt cọc</label>
@@ -189,14 +188,15 @@
         
         <div class="form-group">
             <label>Tình trạng sản phẩm</label>
-            <input type="text" id="apt-status" class="input-readonly" readonly placeholder="Hệ thống tự động quét..." data-val="">
+            <select id="apt-status" onchange="updatePaymentPlans(this.value)">
+                <option value="DaXay">Đã xây dựng</option>
+                <option value="ChuaXay">Chưa xây dựng</option>
+            </select>
         </div>
         
         <div class="form-group" style="grid-column: span 2;">
             <label>Phương thức thanh toán</label>
-            <select id="payment-plan">
-                <option value="">Vui lòng nhập mã căn trước...</option>
-            </select>
+            <select id="payment-plan"></select>
         </div>
 
         <div class="form-group full-width no-print" id="auto-extra-discount-box">
@@ -356,31 +356,31 @@
         });
     }
 
-    // ===== TỰ ĐỘNG NHẬN DIỆN "TYPE" KHI SALE NHẬP MÃ CĂN =====
-    document.getElementById('apt-code').addEventListener('blur', function() {
+    // ===== TỰ ĐỘNG NHẬN DIỆN "TYPE" KHI SALE ĐANG GÕ =====
+    document.getElementById('apt-code').addEventListener('input', function() {
         if(masterData.length === 0) return;
-        const apt = findApt(this.value);
+        const code = this.value.toUpperCase().trim();
+        const apt = findApt(code);
         const statusEl = document.getElementById('apt-status');
         
         if(apt) {
             let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
-            let statusVal = typeRaw.includes("chưa xây") ? "ChuaXay" : "DaXay";
+            let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
 
-            statusEl.value = (statusVal === 'DaXay') ? "Đã xây dựng" : "Chưa xây dựng";
-            statusEl.setAttribute('data-val', statusVal);
-            
-            // Gọi hàm cập nhật PTTT tương ứng
-            updatePaymentPlans(statusVal);
-        } else {
-            statusEl.value = "";
-            statusEl.setAttribute('data-val', "");
-            document.getElementById('payment-plan').innerHTML = "<option value=''>Mã sản phẩm không tồn tại...</option>";
+            // Chỉ cập nhật nếu thực sự có sự thay đổi (tránh giật lag dropdown)
+            if (statusEl.value !== statusVal) {
+                statusEl.value = statusVal;
+                updatePaymentPlans(statusVal);
+            }
         }
     });
 
-    // ===== MENU PHƯƠNG THỨC THANH TOÁN ĐỘNG THEO STATUS =====
+    // ===== MENU PHƯƠNG THỨC THANH TOÁN ĐỘNG =====
     function updatePaymentPlans(status) {
+        if (!status) status = document.getElementById('apt-status').value;
         const planSelect = document.getElementById('payment-plan');
+        const currentPlan = planSelect.value;
+        
         planSelect.innerHTML = "";
         
         if(status === 'DaXay') {
@@ -390,6 +390,12 @@
         } else if (status === 'ChuaXay') {
             planSelect.innerHTML += `<option value="12">Thanh toán 12 tháng (Tiến độ Đất/Xây riêng biệt)</option>`;
             planSelect.innerHTML += `<option value="30">Thanh toán sớm tiền Đất 30 ngày (CK 7% trên tiền Đất)</option>`;
+        }
+
+        // Cố gắng giữ lại tùy chọn cũ nếu nó tồn tại trong danh sách mới
+        if(currentPlan) {
+            const exists = Array.from(planSelect.options).some(opt => opt.value === currentPlan);
+            if(exists) planSelect.value = currentPlan;
         }
     }
 
@@ -414,6 +420,19 @@
                 statusEl.style.color = "green";
                 statusEl.style.background = "#f0fdf4";
                 
+                // Đổ dữ liệu vào list gợi ý
+                const datalist = document.getElementById('apt-list');
+                datalist.innerHTML = "";
+                masterData.forEach(item => {
+                    const code = String(item.ma_can || item.Ma_can || item.id || "").trim();
+                    if(code) {
+                        let opt = document.createElement('option');
+                        opt.value = code;
+                        datalist.appendChild(opt);
+                    }
+                });
+
+                updatePaymentPlans();
                 // Phục hồi form từ bộ nhớ tạm
                 restoreFormState();
             })
@@ -433,18 +452,15 @@
                 
                 if(state.aptCode) {
                     document.getElementById('apt-code').value = state.aptCode;
-                    // Tự động kích hoạt logic tìm căn
-                    const apt = findApt(state.aptCode);
-                    if(apt) {
-                        let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
-                        let statusVal = typeRaw.includes("chưa xây") ? "ChuaXay" : "DaXay";
-                        let statusEl = document.getElementById('apt-status');
-                        statusEl.value = (statusVal === 'DaXay') ? "Đã xây dựng" : "Chưa xây dựng";
-                        statusEl.setAttribute('data-val', statusVal);
-                        updatePaymentPlans(statusVal);
-                        
-                        if(state.plan) document.getElementById('payment-plan').value = state.plan;
-                    }
+                }
+
+                if(state.status) {
+                    document.getElementById('apt-status').value = state.status;
+                    updatePaymentPlans(state.status);
+                }
+
+                if(state.plan) {
+                    document.getElementById('payment-plan').value = state.plan;
                 }
 
                 if (state.depositDate) document.getElementById('deposit-date').value = state.depositDate;
@@ -609,9 +625,7 @@
         const apt = findApt(codeInput);
         if (!apt) return alert("Không tìm thấy mã sản phẩm: " + codeInput);
 
-        const status = document.getElementById('apt-status').getAttribute('data-val');
-        if (!status) return alert("Hệ thống chưa nhận diện được tình trạng căn!");
-
+        const status = document.getElementById('apt-status').value;
         const mode = document.querySelector('input[name="calc-mode"]:checked').value;
         const plan = document.getElementById('payment-plan').value;
 
@@ -620,6 +634,7 @@
             fullname: khachHang,
             aptCode: codeInput,
             depositDate: depositDate,
+            status: status,
             plan: plan,
             mode: mode,
             enableExtra: document.getElementById('enable-extra').checked,
