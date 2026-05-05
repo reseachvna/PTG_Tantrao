@@ -58,7 +58,6 @@
         .mode-selector { background: #FFF4EC; border: 1px dashed var(--accent); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 30px; align-items: center; justify-content: center; }
         .mode-selector label { cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px; color: var(--primary);}
         
-        /* Chỉnh màu Radio button giả lập */
         input[type="radio"] { accent-color: var(--primary); }
 
         .custom-discount-box { background: #FFF4EC; border: 1px solid var(--accent); padding: 20px; border-radius: 8px; margin-top: 10px; display: none; }
@@ -76,7 +75,6 @@
         .btn-remove { background: #D62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s;}
         .btn-remove:hover { background: #E63946; }
 
-        /* Nút Tạo phiếu chuẩn Tone */
         .btn-main { 
             background: var(--btn-gradient); 
             color: white; 
@@ -127,7 +125,6 @@
         .copyright-footer { text-align: right; margin-top: 20px; border-top: 1px dashed var(--border-line); padding-top: 10px; font-size: 12px; color: var(--text-label); font-style: italic; }
         .copyright-footer strong { color: var(--primary); font-weight: bold; font-style: normal;}
 
-        /* CSS TỐI ƯU TRANG IN & KHÔNG GÂY LỖI MOBILE */
         @page { margin: 10mm; }
 
         @media print {
@@ -139,12 +136,12 @@
             .header-box { display: block !important; margin-bottom: 15px; border-bottom: 2px solid #F4A261; padding-bottom: 10px;}
             h1 { font-size: 18px; margin-bottom: 2px; color: #8B1E2D !important; }
             h2 { font-size: 14px; margin-bottom: 0px; color: #E76F51 !important;}
-            .result-header { font-size: 15px; margin-bottom: 10px; color: #8B1E2D !important; }
+            .result-header { font-size: 15px; margin-bottom: 10px; color: #8B1E2D !important; border-bottom: 1px solid #000; }
             
             .info-grid { gap: 10px; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; background: #fff; }
             .info-item { padding-bottom: 2px; border-bottom: 1px dotted #ccc; }
             .price-highlight { padding: 10px 15px; margin-bottom: 15px; border: 1px solid #F4A261; background: #FFF4EC !important; }
-            .schedule-header { color: #8B1E2D !important; font-size: 13px; margin-top: 15px; margin-bottom: 5px;}
+            .schedule-header { color: #8B1E2D !important; font-size: 13px; margin-top: 15px; margin-bottom: 5px; border-bottom: 1px solid #000;}
             table.schedule-table { margin-bottom: 10px; }
             .schedule-table th { background: #8B1E2D !important; color: #fff !important; border-color: #8B1E2D !important; padding: 6px; font-size: 11px; }
             .schedule-table td { padding: 6px; font-size: 11px; border-color: #ccc; color: #000; }
@@ -213,8 +210,7 @@
         </div>
         <div class="form-group">
             <label>Mã sản phẩm</label>
-            <input type="text" id="apt-code" list="apt-list" placeholder="Gõ mã (VD: F1.01)..." autocomplete="off">
-            <datalist id="apt-list"></datalist>
+            <input type="text" id="apt-code" placeholder="Nhập mã căn (Ví dụ: F1.01)" autocomplete="off">
         </div>
         <div class="form-group">
             <label>Ngày đặt cọc</label>
@@ -223,13 +219,13 @@
         
         <div class="form-group">
             <label>Tình trạng sản phẩm</label>
-            <input type="text" id="apt-status" class="input-readonly" readonly placeholder="Tự động điền theo Mã..." data-val="">
+            <input type="text" id="apt-status" class="input-readonly" readonly placeholder="Chờ nhập mã hợp lệ..." data-val="">
         </div>
         
         <div class="form-group" style="grid-column: span 2;">
             <label>Phương thức thanh toán</label>
             <select id="payment-plan">
-                <option value="">Vui lòng nhập mã sản phẩm hợp lệ...</option>
+                <option value="">Vui lòng nhập mã sản phẩm...</option>
             </select>
         </div>
 
@@ -380,41 +376,49 @@
         }
     }
 
-    // ===== TÌM CĂN THEO MÃ CĂN =====
+    // ===== TÌM CĂN THEO MÃ CĂN (ĐÃ XỬ LÝ KHOẢNG TRẮNG CỦA JSON) =====
     function findApt(code) {
         if(!code) return null;
-        code = code.toUpperCase().trim();
+        const cleanInputCode = code.toUpperCase().trim();
         return masterData.find(item => {
-            const maCan = item.ma_can || item.Ma_can || item.id || "";
-            return String(maCan).toUpperCase().trim() === code;
+            const maCanJSON = String(item.ma_can || item.Ma_can || item.id || "").toUpperCase().trim();
+            return maCanJSON === cleanInputCode;
         });
     }
 
-    // ===== TỰ ĐỘNG NHẬN DIỆN "TYPE" KHI SALE ĐANG GÕ THỜI GIAN THỰC =====
+    // ===== AUTO-DETECT KHI SALE GÕ TỪNG PHÍM =====
     document.getElementById('apt-code').addEventListener('input', function() {
         if(masterData.length === 0) return;
         const code = this.value.toUpperCase().trim();
         const statusEl = document.getElementById('apt-status');
         const planSelect = document.getElementById('payment-plan');
         
-        // Nếu xoá trắng ô mã căn hoặc gõ không khớp mã nào
-        const apt = findApt(code);
-        if (!apt) {
+        // Nếu xóa trắng ô mã căn
+        if (code === "") {
             statusEl.value = "Chờ nhập mã hợp lệ...";
             statusEl.setAttribute('data-val', "");
             planSelect.innerHTML = "<option value=''>Vui lòng nhập mã sản phẩm...</option>";
             return;
         }
-        
-        // Nếu khớp mã, tự động điền Status và Update Options
-        let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
-        let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
-        let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
 
-        if (statusEl.getAttribute('data-val') !== statusVal) {
-            statusEl.value = statusText;
-            statusEl.setAttribute('data-val', statusVal);
-            updatePaymentPlans(statusVal);
+        const apt = findApt(code);
+        
+        // Nếu khớp đúng mã
+        if(apt) {
+            let typeRaw = String(apt.Type || apt.type || "").trim().toLowerCase();
+            let statusVal = typeRaw.includes("chưa") ? "ChuaXay" : "DaXay";
+            let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
+
+            if (statusEl.getAttribute('data-val') !== statusVal) {
+                statusEl.value = statusText;
+                statusEl.setAttribute('data-val', statusVal);
+                updatePaymentPlans(statusVal);
+            }
+        } else {
+            // Nếu mã sai / chưa gõ xong
+            statusEl.value = "Mã không tồn tại...";
+            statusEl.setAttribute('data-val', "");
+            planSelect.innerHTML = "<option value=''>Mã sản phẩm không tồn tại...</option>";
         }
     });
 
@@ -440,7 +444,7 @@
         }
     }
 
-    // ===== KHỞI CHẠY HỆ THỐNG & PHỤC HỒI DỮ LIỆU =====
+    // ===== KHỞI CHẠY HỆ THỐNG =====
     function initApp() {
         checkSalesLogin();
 
@@ -460,20 +464,8 @@
                 
                 statusEl.innerHTML = "✓ Dữ liệu đã sẵn sàng!";
                 statusEl.className = "status-success";
-                
-                // Đổ list gợi ý mã căn
-                const datalist = document.getElementById('apt-list');
-                datalist.innerHTML = "";
-                masterData.forEach(item => {
-                    const code = String(item.ma_can || item.Ma_can || item.id || "").trim();
-                    if(code) {
-                        let opt = document.createElement('option');
-                        opt.value = code;
-                        datalist.appendChild(opt);
-                    }
-                });
 
-                // Phục hồi form
+                // Phục hồi form từ bộ nhớ tạm
                 restoreFormState();
             })
             .catch(err => {
@@ -491,12 +483,12 @@
                 
                 if(state.aptCode) {
                     document.getElementById('apt-code').value = state.aptCode;
-                    // Trigger validation
+                    // Trigger input event để quét lại json tự động
                     document.getElementById('apt-code').dispatchEvent(new Event('input'));
                 }
 
                 if(state.plan) {
-                    // Cần delay nhẹ xíu để đợi Datalist và input event update xong status
+                    // Delay nhẹ để input event phía trên xử lý DOM xong
                     setTimeout(() => {
                         const planSelect = document.getElementById('payment-plan');
                         const exists = Array.from(planSelect.options).some(opt => opt.value === state.plan);
@@ -669,10 +661,11 @@
         if (!apt) return alert("Không tìm thấy mã sản phẩm hợp lệ!");
 
         const status = document.getElementById('apt-status').getAttribute('data-val');
-        if (!status) return alert("Vui lòng nhập mã sản phẩm hợp lệ để phần mềm nhận diện tình trạng!");
+        if (!status) return alert("Vui lòng nhập đúng mã sản phẩm để phần mềm nhận diện tình trạng!");
 
         const mode = document.querySelector('input[name="calc-mode"]:checked').value;
         const plan = document.getElementById('payment-plan').value;
+        if (!plan) return alert("Vui lòng chọn phương thức thanh toán!");
 
         // Lưu State vào SessionStorage
         const formState = {
@@ -793,11 +786,10 @@
     function renderSchedule(status, plan, finalGiaDat, finalGiaXay, tongGiaSauCK, depositDateStr) {
         const container = document.getElementById('schedule-content');
         container.innerHTML = "";
-        const deposit = 50000000; // Đặt cọc Tân Trào 50 triệu
+        const deposit = 50000000; 
         let hdmbObj = new Date(depositDateStr);
-        hdmbObj.setDate(hdmbObj.getDate() + 7); // Tân Trào Ký HĐMB sau 7 ngày
+        hdmbObj.setDate(hdmbObj.getDate() + 7); 
 
-        // ===== TRƯỜNG HỢP 1: ĐÃ XÂY DỰNG (GỘP 1 BẢNG) =====
         if (status === 'DaXay') {
             let steps = [];
             if (plan === '12') {
@@ -846,7 +838,6 @@
             container.innerHTML = html;
         } 
         
-        // ===== TRƯỜNG HỢP 2: CHƯA XÂY DỰNG (TÁCH 2 BẢNG ĐẤT / XÂY) =====
         else {
             let landSteps = [];
             if (plan === '12') {
@@ -893,14 +884,13 @@
             buildSteps.forEach((s) => {
                 let amount = Math.round((finalGiaXay * s.p) / 1000) * 1000;
                 totalBuildPaid += amount;
-                // Giả định T_XD bắt đầu cùng ngày HĐMB để minh họa
                 let dateStr = calculateDate(hdmbObj, s.daysFromT);
                 html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong></td></tr>`;
             });
             html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Xây 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--primary);">${formatMoney(totalBuildPaid)}</strong></td></tr></table>`;
 
             // ĐỢT CUỐI: 5% TỔNG
-            let final5Percent = tongGiaSauCK - totalLandPaid - totalBuildPaid; // Dùng phép trừ để tránh lệch số lẻ làm tròn
+            let final5Percent = tongGiaSauCK - totalLandPaid - totalBuildPaid;
             html += `<div class="schedule-header">3. THANH TOÁN ĐỢT CUỐI (5% TỔNG GIÁ TRỊ CĂN)</div>`;
             html += `<table class="schedule-table"><tr><th style="width: 35%;">Tiến độ Bàn giao GCN</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>`;
             html += `<tr><td>Lần 4_HĐMB (Giá trị QSD đất + Giá trị XD)<br><i>(Theo thông báo nhận GCN của CĐT)</i></td><td class="td-center">Theo TB</td><td class="td-center" style="color: var(--primary);"><strong>Theo TB</strong></td><td class="td-center"><strong>5%</strong></td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(final5Percent)}</strong></td></tr></table>`;
