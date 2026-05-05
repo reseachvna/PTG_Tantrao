@@ -384,7 +384,7 @@
         return foundKey ? item[foundKey] : null;
     };
 
-    // ===== TÌM CĂN THEO MÃ CĂN CHÍNH XÁC =====
+    // ===== TÌM CĂN THEO MÃ CĂN =====
     function findApt(code) {
         if(!code) return null;
         const cleanInputCode = code.toUpperCase().trim();
@@ -394,7 +394,7 @@
         });
     }
 
-    // ===== AUTO-DETECT KHI SALE GÕ TỪNG PHÍM =====
+    // ===== AUTO-DETECT QUÉT LOGIC "TRUE/FALSE" THỜI GIAN THỰC =====
     document.getElementById('apt-code').addEventListener('input', function() {
         if(masterData.length === 0) return;
         const code = this.value.toUpperCase().trim();
@@ -413,12 +413,12 @@
         
         // Nếu khớp đúng mã
         if(apt) {
-            // FIX LỖI TẠI ĐÂY: Chỉ dùng contains chuỗi cơ bản, tuyệt đối không dùng normalize
-            let typeRaw = String(layGiaTriCot(apt, "Type") || "").toLowerCase();
-            let isChuaXay = typeRaw.includes("chưa") || typeRaw.includes("chua");
+            // Quét dữ liệu Type và gọt khoảng trắng thừa từ JSON (ví dụ " FALSE ")
+            let typeRaw = String(layGiaTriCot(apt, "Type") || "").toUpperCase().trim();
             
-            let statusVal = isChuaXay ? "ChuaXay" : "DaXay";
-            let statusText = isChuaXay ? "Chưa xây dựng" : "Đã xây dựng";
+            // Logic: False = Chưa Xây, True = Đã Xây
+            let statusVal = (typeRaw === "FALSE") ? "ChuaXay" : "DaXay";
+            let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
 
             if (statusEl.getAttribute('data-val') !== statusVal) {
                 statusEl.value = statusText;
@@ -682,7 +682,6 @@
             fullname: khachHang,
             aptCode: codeInput,
             depositDate: depositDate,
-            status: status,
             plan: plan,
             mode: mode,
             enableExtra: document.getElementById('enable-extra').checked,
