@@ -468,7 +468,7 @@
                 masterData = Array.isArray(data) ? data : data[Object.keys(data)[0]];
                 if (!masterData || masterData.length === 0) throw new Error("Rỗng");
                 
-                statusEl.innerHTML = "✓ Dữ liệu đã sẵn sàng!";
+                statusEl.innerHTML = "✓ Kết nối dữ liệu thành công";
                 statusEl.className = "status-success";
 
                 restoreFormState();
