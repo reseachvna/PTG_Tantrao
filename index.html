@@ -161,6 +161,19 @@
             .print-header-actions { flex-direction: column; align-items: stretch; gap: 15px; text-align: center; }
             .custom-table, .schedule-table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;}
         }
+        /* CSS Nút Link Tài Liệu Dự Án (F-Deal Ver 2) */
+        .btn-info-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #ebf8ff; color: #2b6cb0; text-decoration: none;
+            padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold;
+            border: 1px dashed #3182ce; transition: 0.3s ease;
+        }
+        .btn-info-link:hover {
+            background: #bee3f8; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(49, 130, 206, 0.15);
+        }
+        .fdeal-brand {
+            color: #e53e3e; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -196,7 +209,7 @@
         <h1>Bảng tính giá & Tiến độ thanh toán</h1>
         <h2>Flamingo Tân Trào Heritage Onsen & Resort</h2>
         <div id="data-status" class="status-success">⏳ Đang tải dữ liệu sản phẩm...</div>
-         <a href="https://drive.google.com/drive/folders/1DQF4Ghrttt_Of8YrvnmXxMWXdfBFdQf7?usp=drive_link" target="_blank" class="btn-info-link">📁 TÀI LIỆU DỰ ÁN</a>
+        <a href="https://drive.google.com/drive/folders/1DQF4Ghrttt_Of8YrvnmXxMWXdfBFdQf7?usp=drive_link" target="_blank" class="btn-info-link">📁 TÀI LIỆU DỰ ÁN</a>
     </div>
 
     <div class="mode-selector no-print">
