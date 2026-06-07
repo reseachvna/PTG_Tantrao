@@ -3,932 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phiếu Tính Giá Flamingo Tân Trào Heritage Onsen & Resort</title>
+    <title>Đang Cập Nhật Chính Sách sản phẩm mới nhất</title>
     <style>
         :root {
-            --primary: #8B1E2D;      /* Đỏ rượu vang */
-            --secondary: #E76F51;    /* Cam đất */
-            --accent: #F4A261;       /* Cam sáng */
-            --bg-body: #f8f9fa;      /* Xám nền ngoài */
-            --bg-container: #FDF6F0; /* Nền kem nhẹ */
-            --border-line: #E5DCD5;  /* Viền nhẹ */
-            --text-main: #2D2D2D;    /* Đen mềm */
-            --text-label: #6B6B6B;   /* Xám mô tả */
-            --btn-gradient: linear-gradient(135deg, #8B1E2D, #F4A261);
-            --btn-gradient-hover: linear-gradient(135deg, #A32638, #FFB36B);
+            --bg-gradient: linear-gradient(135deg, #f5eae4 0%, #ecc1b2 50%, #d49a89 100%);
+            --text-main: #0f3132;
+            --text-sub: #5c7172;
+            --flamingo-color: #e58e73;
+            --flamingo-dark: #b86248;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; margin: 0; padding: 20px;}
-        .container { max-width: 1200px; margin: 10px auto; background: var(--bg-container); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); position: relative;}
-        
-        .header-box { text-align: center; border-bottom: 2px solid var(--accent); margin-bottom: 25px; padding-bottom: 15px; }
-        h1 { color: var(--primary); text-transform: uppercase; margin-bottom: 5px; font-size: 26px; letter-spacing: 1px;}
-        h2 { color: var(--secondary); font-weight: bold; margin-top: 0; font-size: 18px; }
-        
-        #data-status { font-weight: bold; margin-top: 15px; padding: 8px 20px; border-radius: 20px; display: inline-block; font-size: 14px;}
-        .status-success { background: #E6F4EA; color: #2D6A4F; border: 1px solid #C3E6CB; }
-        .status-error { background: #FDE8E8; color: #C53030; border: 1px solid #FEB2B2; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px);}
-        .modal-content { background: var(--bg-container); padding: 35px 30px; border-radius: 12px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .sale-greeting-box { text-align: right; margin-bottom: 10px; font-size: 14px; color: var(--text-label); }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; text-align: left; margin-bottom: 30px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group label { font-weight: 600; margin-bottom: 8px; color: var(--text-label); font-size: 13px; text-transform: uppercase;}
-        
-        .form-group input, .form-group select { 
-            padding: 12px; 
-            border: 1px solid #D6CCC2; 
-            border-radius: 6px; 
-            font-size: 15px; 
-            background: #FFFFFF;
-            outline: none; 
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
             color: var(--text-main);
-            transition: all 0.2s ease; 
-        }
-        .form-group input:focus, .form-group select:focus { 
-            border-color: var(--secondary); 
-            box-shadow: 0 0 0 2px rgba(231, 111, 81, 0.2); 
-        }
-        
-        .input-readonly { background-color: #F8F9FA !important; color: var(--primary) !important; font-weight: bold; cursor: not-allowed; border-style: dashed !important;}
-
-        .full-width { grid-column: span 3; }
-        .mode-selector { background: #FFF4EC; border: 1px dashed var(--accent); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 30px; align-items: center; justify-content: center; }
-        .mode-selector label { cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px; color: var(--primary);}
-        
-        input[type="radio"] { accent-color: var(--primary); }
-
-        .custom-discount-box { background: #FFF4EC; border: 1px solid var(--accent); padding: 20px; border-radius: 8px; margin-top: 10px; display: none; }
-        .extra-discount-container { background: #FFF4EC; border: 1px solid var(--accent); padding: 20px; border-radius: 8px; margin-top: 10px; }
-        
-        .custom-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        .custom-table th { font-size: 13px; color: var(--text-label); padding-bottom: 8px; border-bottom: 1px solid var(--border-line); margin-bottom: 8px;}
-        .custom-table td { padding-top: 8px; }
-        .custom-table input, .custom-table select { width: 95%; padding: 8px; border: 1px solid #D6CCC2; border-radius: 4px; font-size: 14px; background: #fff;}
-        .custom-table input:focus, .custom-table select:focus { border-color: var(--secondary); box-shadow: 0 0 0 2px rgba(231, 111, 81, 0.2); }
-        
-        .btn-add { background: var(--secondary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s;}
-        .btn-add:hover { background: #F08A5D; }
-        
-        .btn-remove { background: #D62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s;}
-        .btn-remove:hover { background: #E63946; }
-
-        .btn-main { 
-            background: var(--btn-gradient); 
-            color: white; 
-            border: none; 
-            padding: 16px 40px; 
-            border-radius: 30px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            letter-spacing: 0.5px;
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            display: block; 
-            margin: 20px auto; 
-            min-width: 320px;
-            box-shadow: 0 4px 10px rgba(139, 30, 45, 0.25);
-        }
-        .btn-main:hover { 
-            background: var(--btn-gradient-hover);
-            transform: translateY(-2px); 
-            box-shadow: 0 6px 15px rgba(139, 30, 45, 0.4);
         }
 
-        .btn-print { background: #38a169; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        
-        #result-box { display: none; margin-top: 40px; padding-top: 30px; border-top: 2px dashed var(--border-line); text-align: left; }
-        .print-header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .result-header { color: var(--primary); margin: 0; font-size: 22px; text-transform: uppercase; font-weight: bold; }
-        
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid var(--border-line);}
-        .info-item { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-line); padding-bottom: 8px; align-items: center;}
-        .info-item span { color: var(--text-label); font-size: 14px;}
-        .info-item strong { color: var(--text-main); font-size: 15px;}
-        
-        .price-highlight { background: #FFF4EC; padding: 20px; border-radius: 8px; border: 1px solid var(--accent); margin-bottom: 30px; }
-        .final-price-container { border-top: 2px dashed var(--accent); margin-top: 20px; padding-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .final-price { color: var(--primary); font-size: 24px; font-weight: bold; } 
-        .discount-detail { font-size: 14px; color: var(--text-main); margin-top: 15px; padding-left: 15px; border-left: 3px solid var(--secondary); line-height: 1.8;}
-
-        .schedule-header { color: var(--primary); margin-top: 25px; font-size: 16px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase;}
-        
-        table.schedule-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
-        .schedule-table th { background: var(--primary); color: white; padding: 12px 10px; border: 1px solid var(--primary); text-align: center; font-size: 13px;}
-        .schedule-table td { border: 1px solid var(--border-line); padding: 10px; vertical-align: middle; font-size: 14px; color: var(--text-main);}
-        .schedule-table tr:nth-child(even) { background: var(--bg-container); }
-        .td-center { text-align: center; }
-        .td-right { text-align: right; }
-
-        .copyright-footer { text-align: right; margin-top: 20px; border-top: 1px dashed var(--border-line); padding-top: 10px; font-size: 12px; color: var(--text-label); font-style: italic; }
-        .copyright-footer strong { color: var(--primary); font-weight: bold; font-style: normal;}
-
-        @page { margin: 10mm; }
-
-        @media print {
-            .no-print { display: none !important; }
-            * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
-            body { font-size: 11px; line-height: 1.3; color: #000; background: #fff; }
-            .container { box-shadow: none; padding: 0; margin: 0; width: 100%; max-width: 100%; border: none; background: #fff;}
-            #result-box { display: block !important; margin-top: 0; padding-top: 0; border: none; }
-            .header-box { display: block !important; margin-bottom: 15px; border-bottom: 2px solid #F4A261; padding-bottom: 10px;}
-            h1 { font-size: 18px; margin-bottom: 2px; color: #8B1E2D !important; }
-            h2 { font-size: 14px; margin-bottom: 0px; color: #E76F51 !important;}
-            .result-header { font-size: 15px; margin-bottom: 10px; color: #8B1E2D !important; border-bottom: 1px solid #000; }
-            
-            .info-grid { gap: 10px; margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; background: #fff; }
-            .info-item { padding-bottom: 2px; border-bottom: 1px dotted #ccc; }
-            .price-highlight { padding: 10px 15px; margin-bottom: 15px; border: 1px solid #F4A261; background: #FFF4EC !important; }
-            .schedule-header { color: #8B1E2D !important; font-size: 13px; margin-top: 15px; margin-bottom: 5px; border-bottom: 1px solid #000;}
-            table.schedule-table { margin-bottom: 10px; }
-            .schedule-table th { background: #8B1E2D !important; color: #fff !important; border-color: #8B1E2D !important; padding: 6px; font-size: 11px; }
-            .schedule-table td { padding: 6px; font-size: 11px; border-color: #ccc; color: #000; }
-            tr { page-break-inside: avoid; }
-            .copyright-footer { color: #666 !important; border-top: 1px solid #999; margin-top: 10px; padding-top: 5px; }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px 20px;
+            z-index: 2;
+            position: relative;
         }
 
-        @media screen and (max-width: 768px) {
-            body { padding: 10px; }
-            .container { padding: 15px; margin: 0; }
-            h1 { font-size: 20px; }
-            .form-grid { grid-template-columns: 1fr; gap: 15px; }
-            .full-width { grid-column: span 1; }
-            .info-grid { grid-template-columns: 1fr; gap: 15px; }
-            .mode-selector { flex-direction: column; gap: 15px; }
-            .btn-main { width: 100%; min-width: unset; margin: 15px 0; }
-            .print-header-actions { flex-direction: column; align-items: stretch; gap: 15px; text-align: center; }
-            .custom-table, .schedule-table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;}
+        /* --- Nghệ thuật tạo hình bầy hồng hạc bằng CSS --- */
+        .flamingo-scene {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
         }
-        /* CSS Nút Link Tài Liệu Dự Án (F-Deal Ver 2) */
-        .btn-info-link {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #ebf8ff; color: #2b6cb0; text-decoration: none;
-            padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: bold;
-            border: 1px dashed #3182ce; transition: 0.3s ease;
+
+        /* Chân đế/Mặt nước */
+        .water-line {
+            position: absolute;
+            bottom: 15px;
+            width: 280px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--text-main), transparent);
+            opacity: 0.3;
         }
-        .btn-info-link:hover {
-            background: #bee3f8; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(49, 130, 206, 0.15);
+
+        .flamingo {
+            position: relative;
+            width: 60px;
+            height: 160px;
+            margin: 0 10px;
+            transform-origin: bottom center;
         }
-        .fdeal-brand {
-            color: #e53e3e; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;
+
+        /* Chi tiết con hồng hạc chính */
+        .flamingo .body {
+            position: absolute;
+            top: 40px;
+            left: 5px;
+            width: 50px;
+            height: 35px;
+            background: var(--flamingo-color);
+            border-radius: 50px 40px 40px 40px;
+            transform: rotate(-10deg);
+            box-shadow: inset -5px -5px 10px var(--flamingo-dark);
+        }
+
+        .flamingo .neck {
+            position: absolute;
+            top: 10px;
+            right: 8px;
+            width: 12px;
+            height: 45px;
+            border-right: 8px solid var(--flamingo-color);
+            border-radius: 0 25px 0 0;
+            transform: rotate(15deg);
+        }
+
+        .flamingo .head {
+            position: absolute;
+            top: 2px;
+            right: 0px;
+            width: 16px;
+            height: 14px;
+            background: var(--flamingo-color);
+            border-radius: 50%;
+        }
+
+        .flamingo .beak {
+            position: absolute;
+            top: 6px;
+            right: -10px;
+            width: 12px;
+            height: 8px;
+            background: var(--text-main);
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            transform: rotate(20deg);
+        }
+
+        .flamingo .legs {
+            position: absolute;
+            bottom: 15px;
+            left: 25px;
+            width: 2px;
+            height: 75px;
+            background: var(--flamingo-dark);
+        }
+
+        /* Chân đứng co (đặc trưng của hồng hạc) */
+        .flamingo .legs::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 0;
+            width: 25px;
+            height: 2px;
+            background: var(--flamingo-dark);
+            transform: rotate(45deg);
+            transform-origin: left center;
+        }
+
+        /* Tạo biến thể cho bầy chim (Kích thước và hiệu ứng động) */
+        .flamingo.f1 {
+            transform: scale(0.95);
+            animation: float 4s ease-in-out infinite alternate;
+        }
+
+        .flamingo.f2 {
+            transform: scale(1.1) scaleX(-1); /* Quay mặt hướng ngược lại */
+            filter: brightness(0.9);
+            animation: float 4.5s ease-in-out infinite alternate-reverse;
+            margin-bottom: -5px;
+        }
+
+        .flamingo.f3 {
+            transform: scale(0.85);
+            filter: brightness(0.8);
+            animation: float 3.8s ease-in-out infinite alternate;
+            margin-bottom: 5px;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(var(--tw-scale-x, 1)); }
+            100% { transform: translateY(-6px) scale(var(--tw-scale-x, 1)); }
+        }
+
+        /* --- Phần nội dung thông báo --- */
+        .content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .content p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-sub);
+            margin-bottom: 30px;
+        }
+
+        /* Thanh tiến trình chạy ngầm tinh tế */
+        .progress-bar {
+            width: 180px;
+            height: 3px;
+            background: rgba(15, 49, 50, 0.1);
+            margin: 0 auto 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--text-main);
+            animation: loading 2.5s infinite linear;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0; }
+            100% { left: 100%; }
+        }
+
+        .footer {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-<div id="sales-modal" class="modal-overlay no-print">
-    <div class="modal-content">
-        <h3 style="color:var(--primary); margin-top:0; font-size: 20px;">ĐĂNG NHẬP HỆ THỐNG</h3>
-        <p style="font-size:14px; color:var(--text-label); margin-bottom: 25px;">Vui lòng nhập đúng thông tin để ghi nhận báo giá.</p>
-        
-        <div class="form-group" style="margin-bottom: 15px; text-align:left;">
-            <label>Tên chuyên viên tư vấn (*)</label>
-            <input type="text" id="sale-name" placeholder="Ví dụ: Nguyễn Văn A">
-            <span style="font-size: 11px; color: #D62828; margin-top: 4px; font-style: italic;">* Yêu cầu nhập tên thật (Không dùng số).</span>
-        </div>
-        <div class="form-group" style="margin-bottom: 25px; text-align:left;">
-            <label>Số điện thoại / Mã NV (*)</label>
-            <input type="text" id="sale-phone" placeholder="Ví dụ: 0987654321">
-            <span style="font-size: 11px; color: #D62828; margin-top: 4px; font-style: italic;">* Viết liền không dấu, độ dài 4-15 ký tự.</span>
-        </div>
-        
-        <button class="btn-main" style="margin-top:0;" onclick="saveSalesInfo()">XÁC NHẬN BẮT ĐẦU</button>
-    </div>
-</div>
-
-<div class="container">
-    
-    <div id="sale-greeting" class="sale-greeting-box no-print" style="display:none;">
-        👤 Đang tư vấn bởi: <strong id="current-sale-name" style="color:var(--primary);">...</strong> 
-        <a href="#" onclick="logoutSales(); return false;" style="color:#D62828; text-decoration:none; margin-left: 10px; font-size: 13px;">(Đăng xuất)</a>
-    </div>
-
-    <div class="header-box no-print">
-        <h1>Bảng tính giá & Tiến độ thanh toán</h1>
-        <h2>Flamingo Tân Trào Heritage Onsen & Resort</h2>
-        <div id="data-status" class="status-success">⏳ Đang tải dữ liệu sản phẩm...</div>
-        <a href="https://drive.google.com/drive/folders/1DQF4Ghrttt_Of8YrvnmXxMWXdfBFdQf7?usp=drive_link" target="_blank" class="btn-info-link">📁 TÀI LIỆU DỰ ÁN</a>
-    </div>
-
-    <div class="mode-selector no-print">
-        <label><input type="radio" name="calc-mode" value="auto" checked onchange="toggleMode()"> TÍNH TỰ ĐỘNG</label>
-        <label><input type="radio" name="calc-mode" value="custom" onchange="toggleMode()"> TÙY CHỈNH NGOẠI GIAO</label>
-    </div>
-
-    <div class="form-grid no-print">
-        <div class="form-group">
-            <label>Tên khách hàng</label>
-            <input type="text" id="fullname" placeholder="Họ và tên khách hàng...">
-        </div>
-        <div class="form-group">
-            <label>Mã sản phẩm</label>
-            <input type="text" id="apt-code" placeholder="Nhập mã căn (Ví dụ: F1.01)" autocomplete="off">
-        </div>
-        <div class="form-group">
-            <label>Ngày đặt cọc</label>
-            <input type="date" id="deposit-date">
-        </div>
-        
-        <div class="form-group">
-            <label>Tình trạng sản phẩm</label>
-            <input type="text" id="apt-status" class="input-readonly" readonly placeholder="Chờ nhập mã hợp lệ..." data-val="">
-        </div>
-        
-        <div class="form-group" style="grid-column: span 2;">
-            <label>Phương thức thanh toán</label>
-            <select id="payment-plan">
-                <option value="">Vui lòng nhập mã sản phẩm...</option>
-            </select>
-        </div>
-
-        <div class="form-group full-width no-print" id="auto-extra-discount-box">
-            <div class="extra-discount-container">
-                <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer; color: var(--primary);">
-                    <input type="checkbox" id="enable-extra" onchange="toggleExtraDetails()" style="width: 20px; height: 20px;">
-                    <strong>Áp dụng chiết khấu bổ sung (Tính lũy kế trên Tiền Đất)</strong>
-                </label>
-                
-                <div id="extra-details-area" style="display: none;">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Loại chiết khấu</th>
-                                <th>Mốc áp dụng</th>
-                                <th>Giá trị (% hoặc tiền)</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="extra-body">
-                            <tr>
-                                <td>
-                                    <select class="ex-type" onchange="handleExTypeChange(this)">
-                                        <option value="percent">Tỷ lệ (%)</option>
-                                        <option value="amount">Số tiền (VNĐ)</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="ex-base">
-                                        <option value="after-vat">Giá tiền Đất sau CK trước (Gồm VAT)</option>
-                                        <option value="before-vat">Giá tiền Đất sau CK trước (Chưa VAT)</option>
-                                    </select>
-                                </td>
-                                <td><input type="number" class="ex-value" placeholder="Nhập giá trị..." step="0.1"></td>
-                                <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button class="btn-add" onclick="addExtraRow()">+ Thêm chiết khấu bổ sung</button>
-                </div>
+    <div class="container">
+        <div class="flamingo-scene">
+            <div class="flamingo f1">
+                <div class="neck"></div>
+                <div class="head"><div class="beak"></div></div>
+                <div class="body"></div>
+                <div class="legs"></div>
             </div>
-        </div>
-    </div>
-
-    <div id="custom-discount-box" class="custom-discount-box no-print">
-        <label style="font-weight: bold; color: var(--secondary); margin-bottom: 10px; display: inline-block;">Nhập thủ công các mục chiết khấu (Tính lũy kế trên Tiền Đất):</label>
-        <table class="custom-table">
-            <thead><tr><th style="text-align: left;">Nội dung/Lý do</th><th style="text-align: left;">Tỷ lệ (%)</th><th></th></tr></thead>
-            <tbody id="custom-body">
-                <tr>
-                    <td><input type="text" class="c-name" placeholder="Ví dụ: Voucher ngoại giao..."></td>
-                    <td><input type="number" class="c-rate" value="0" step="0.1"></td>
-                    <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="btn-add" onclick="addCustomRow()">+ Thêm dòng chiết khấu</button>
-    </div>
-
-    <button class="btn-main no-print" onclick="calculate()">TẠO PHIẾU TÍNH GIÁ</button>
-
-    <div id="result-box">
-        <div class="header-box" style="display: none;" id="print-title-area">
-            <h1>Bảng tính giá & Tiến độ thanh toán</h1>
-            <h2>Flamingo Tân Trào Heritage Onsen & Resort</h2>
-        </div>
-
-        <div class="print-header-actions">
-            <h3 class="result-header">CHI TIẾT PHIẾU TÍNH GIÁ</h3>
-            <div class="action-buttons no-print">
-                <button class="btn-print" onclick="inPhieu()">🖨️ TẢI PDF / IN PHIẾU</button>
+            
+            <div class="flamingo f2">
+                <div class="neck"></div>
+                <div class="head"><div class="beak"></div></div>
+                <div class="body"></div>
+                <div class="legs"></div>
             </div>
-        </div>
-        
-        <div class="info-grid">
-            <div class="info-item"><span>Khách hàng:</span> <strong id="out-name"></strong></div>
-            <div class="info-item"><span>Mã sản phẩm:</span> <strong id="out-code"></strong></div>
-            <div class="info-item"><span>Phân khu:</span> <strong id="out-type"></strong></div>
-            <div class="info-item"><span>Diện tích đất:</span> <strong><span id="out-area"></span> m2</strong></div>
-        </div>
 
-        <div class="price-highlight">
-            <div class="info-item" style="border:none; padding-bottom: 0;"><span>Giá trị Đất (gồm VAT):</span> <strong id="out-price-land"></strong></div>
-            <div class="info-item" style="border:none; padding-bottom: 0;"><span>Giá trị Xây dựng (gồm VAT):</span> <strong id="out-price-build"></strong></div>
-            <div class="info-item" style="border:none; padding-bottom: 0; margin-top: 5px;"><span>Tổng giá niêm yết:</span> <strong id="out-price-raw" style="font-size: 18px; color: var(--primary)"></strong></div>
-            
-            <div style="margin-top: 20px; font-weight: bold; color: var(--text-main);">Chi tiết áp dụng chiết khấu (Được trừ trực tiếp vào Tiền Đất):</div>
-            <div id="discount-breakdown" class="discount-detail"></div>
-            
-            <div class="final-price-container">
-                <span style="font-size: 18px; color: var(--text-main); font-weight: bold;">TỔNG GIÁ SAU CHIẾT KHẤU:</span>
-                <span class="final-price" id="out-price-final"></span>
+            <div class="flamingo f3">
+                <div class="neck"></div>
+                <div class="head"><div class="beak"></div></div>
+                <div class="body"></div>
+                <div class="legs"></div>
             </div>
+            
+            <div class="water-line"></div>
         </div>
 
-        <div id="schedule-content"></div>
-
-        <div style="margin-top: 30px; text-align: right; color: var(--text-label); font-size: 13px;">
-            Ngày xuất phiếu: <span id="current-print-date"></span>
+        <div class="content">
+            <h1>Chính Sách Đang Cập Nhật</h1>
+            <p>Chúng tôi đang tiến hành cập nhật theo các nội dung mới của chính sách.</p>
+ <p>Mọi thông tin xin liên hệ 096 293 8816.</p>
         </div>
 
-        <div class="copyright-footer">
-            © Developed by <strong>DMD – R&D FLV</strong>
+
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+
+        <div class="footer">
+            Cảm ơn bạn đã quan tâm,
+ &copy;R&D - FLV 2026
         </div>
     </div>
-</div>
-
-<script>
-    let masterData = [];
-
-    // ===== LỌC REGEX ĐĂNG NHẬP =====
-    function checkSalesLogin() {
-        const saleInfo = localStorage.getItem('saleInfo');
-        if (!saleInfo) {
-            document.getElementById('sales-modal').style.display = 'flex';
-            document.getElementById('sale-greeting').style.display = 'none';
-        } else {
-            const info = JSON.parse(saleInfo);
-            document.getElementById('current-sale-name').innerText = info.name;
-            document.getElementById('sales-modal').style.display = 'none';
-            document.getElementById('sale-greeting').style.display = 'block';
-        }
-    }
-
-    function saveSalesInfo() {
-        const name = document.getElementById('sale-name').value.trim();
-        const phone = document.getElementById('sale-phone').value.trim();
-        if (!name || !phone) return alert("⚠️ Vui lòng nhập đầy đủ Tên và Số điện thoại/Mã NV!");
-
-        const nameRegex = /^[\p{L}\s]+$/u;
-        if (!nameRegex.test(name) || name.length < 2) return alert("⚠️ TÊN KHÔNG HỢP LỆ!\nVui lòng nhập đúng Họ và Tên (Không dùng số hoặc ký tự đặc biệt).");
-
-        const phoneRegex = /^[a-zA-Z0-9]+$/;
-        if (!phoneRegex.test(phone) || phone.length < 4 || phone.length > 15) return alert("⚠️ SĐT / MÃ NV KHÔNG HỢP LỆ!\nVui lòng viết liền không dấu, độ dài từ 4-15 ký tự.");
-
-        localStorage.setItem('saleInfo', JSON.stringify({ name: name, phone: phone }));
-        checkSalesLogin();
-    }
-
-    function logoutSales() {
-        if(confirm("Bạn có chắc chắn muốn thoát tài khoản này?")) {
-            localStorage.removeItem('saleInfo');
-            document.getElementById('sale-name').value = '';
-            document.getElementById('sale-phone').value = '';
-            checkSalesLogin();
-        }
-    }
-
-    // ===== HÀM TÌM KEY JSON LINH HOẠT =====
-    const layGiaTriCot = (item, tenCotCanTim) => {
-        if (!item) return null;
-        const cleanTarget = tenCotCanTim.trim().toLowerCase();
-        const foundKey = Object.keys(item).find(k => k.trim().toLowerCase() === cleanTarget);
-        return foundKey ? item[foundKey] : null;
-    };
-
-    // ===== TÌM CĂN THEO MÃ CĂN =====
-    function findApt(code) {
-        if(!code) return null;
-        const cleanInputCode = code.toUpperCase().trim();
-        return masterData.find(item => {
-            const maCanJSON = String(item.ma_can || item.Ma_can || item.id || "").toUpperCase().trim();
-            return maCanJSON === cleanInputCode;
-        });
-    }
-
-    // ===== AUTO-DETECT QUÉT LOGIC "TRUE/FALSE" THỜI GIAN THỰC =====
-    document.getElementById('apt-code').addEventListener('input', function() {
-        if(masterData.length === 0) return;
-        const code = this.value.toUpperCase().trim();
-        const statusEl = document.getElementById('apt-status');
-        const planSelect = document.getElementById('payment-plan');
-        
-        if (code === "") {
-            statusEl.value = "Chờ nhập mã hợp lệ...";
-            statusEl.setAttribute('data-val', "");
-            planSelect.innerHTML = "<option value=''>Vui lòng nhập mã sản phẩm...</option>";
-            return;
-        }
-
-        const apt = findApt(code);
-        
-        if(apt) {
-            let typeRaw = String(layGiaTriCot(apt, "Type") || "").toUpperCase().trim();
-            let statusVal = (typeRaw === "FALSE") ? "ChuaXay" : "DaXay";
-            let statusText = (statusVal === 'ChuaXay') ? "Chưa xây dựng" : "Đã xây dựng";
-
-            if (statusEl.getAttribute('data-val') !== statusVal) {
-                statusEl.value = statusText;
-                statusEl.setAttribute('data-val', statusVal);
-                updatePaymentPlans(statusVal);
-            }
-        } else {
-            statusEl.value = "Mã không tồn tại...";
-            statusEl.setAttribute('data-val', "");
-            planSelect.innerHTML = "<option value=''>Mã sản phẩm không tồn tại...</option>";
-        }
-    });
-
-    // ===== MENU PHƯƠNG THỨC THANH TOÁN ĐỘNG =====
-    function updatePaymentPlans(status) {
-        const planSelect = document.getElementById('payment-plan');
-        const currentPlan = planSelect.value;
-        
-        planSelect.innerHTML = "";
-        
-        if(status === 'DaXay') {
-            planSelect.innerHTML += `<option value="36">Phương án 36 tháng (Tiêu chuẩn)</option>`;
-            planSelect.innerHTML += `<option value="12">Phương án 12 tháng (CK 9.5% trên tiền Đất)</option>`;
-            planSelect.innerHTML += `<option value="30">Thanh toán nhanh 30 ngày (CK 15% trên tiền Đất)</option>`;
-        } else if (status === 'ChuaXay') {
-            planSelect.innerHTML += `<option value="12">Thanh toán 12 tháng (Tiến độ Đất/Xây riêng biệt)</option>`;
-            planSelect.innerHTML += `<option value="30">Thanh toán sớm tiền Đất 30 ngày (CK 7% trên tiền Đất)</option>`;
-        }
-
-        if(currentPlan) {
-            const exists = Array.from(planSelect.options).some(opt => opt.value === currentPlan);
-            if(exists) planSelect.value = currentPlan;
-        }
-    }
-
-    // ===== KHỞI CHẠY HỆ THỐNG =====
-    function initApp() {
-        checkSalesLogin();
-
-        const statusEl = document.getElementById('data-status');
-        const today = new Date();
-        document.getElementById('deposit-date').valueAsDate = today;
-        document.getElementById('current-print-date').innerText = getFormattedDate(today);
-
-        const nocacheUrl = 'Data.json?v=' + new Date().getTime();
-        
-        fetch(nocacheUrl)
-            .then(res => {
-                if (!res.ok) throw new Error("Lỗi " + res.status);
-                return res.json();
-            })
-            .then(data => {
-                masterData = Array.isArray(data) ? data : data[Object.keys(data)[0]];
-                if (!masterData || masterData.length === 0) throw new Error("Rỗng");
-                
-                statusEl.innerHTML = "✓ Kết nối dữ liệu thành công";
-                statusEl.className = "status-success";
-
-                restoreFormState();
-            })
-            .catch(err => {
-                statusEl.innerHTML = "⚠️ Lỗi: Không thể kết nối dữ liệu Data.json";
-                statusEl.className = "status-error";
-            });
-    }
-
-    // ===== PHỤC HỒI FORM THÔNG MINH =====
-    function restoreFormState() {
-        const stateStr = sessionStorage.getItem('tantrao_form_state');
-        if (stateStr) {
-            try {
-                const state = JSON.parse(stateStr);
-                document.getElementById('fullname').value = state.fullname || '';
-                
-                if(state.aptCode) {
-                    document.getElementById('apt-code').value = state.aptCode;
-                    document.getElementById('apt-code').dispatchEvent(new Event('input'));
-                }
-
-                setTimeout(() => {
-                    if(state.plan) {
-                        const planSelect = document.getElementById('payment-plan');
-                        const exists = Array.from(planSelect.options).some(opt => opt.value === state.plan);
-                        if(exists) planSelect.value = state.plan;
-                    }
-                }, 50);
-
-                if (state.depositDate) document.getElementById('deposit-date').value = state.depositDate;
-                
-                if (state.mode) {
-                    document.querySelector(`input[name="calc-mode"][value="${state.mode}"]`).checked = true;
-                    toggleMode();
-                }
-                if (state.enableExtra !== undefined) {
-                    document.getElementById('enable-extra').checked = state.enableExtra;
-                    toggleExtraDetails();
-                }
-                
-                if (state.extraRows && state.extraRows.length > 0) {
-                    document.getElementById('extra-body').innerHTML = '';
-                    state.extraRows.forEach(r => {
-                        const row = `<tr>
-                            <td><select class="ex-type" onchange="handleExTypeChange(this)"><option value="percent" ${r.type==='percent'?'selected':''}>Tỷ lệ (%)</option><option value="amount" ${r.type==='amount'?'selected':''}>Số tiền (VNĐ)</option></select></td>
-                            <td><select class="ex-base" ${r.type==='amount'?'disabled':''}><option value="after-vat" ${r.base==='after-vat'?'selected':''}>Giá tiền Đất sau CK trước (Gồm VAT)</option><option value="before-vat" ${r.base==='before-vat'?'selected':''}>Giá tiền Đất sau CK trước (Chưa VAT)</option></select></td>
-                            <td><input type="number" class="ex-value" placeholder="Nhập giá trị..." step="0.1" value="${r.val}"></td>
-                            <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
-                        </tr>`;
-                        document.getElementById('extra-body').insertAdjacentHTML('beforeend', row);
-                    });
-                }
-
-                if (state.customRows && state.customRows.length > 0) {
-                    document.getElementById('custom-body').innerHTML = '';
-                    state.customRows.forEach(r => {
-                        const row = `<tr>
-                            <td><input type="text" class="c-name" placeholder="Lý do chiết khấu..." value="${r.name}"></td>
-                            <td><input type="number" class="c-rate" step="0.1" value="${r.val}"></td>
-                            <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
-                        </tr>`;
-                        document.getElementById('custom-body').insertAdjacentHTML('beforeend', row);
-                    });
-                }
-
-                setTimeout(() => {
-                    if (state.aptCode && document.getElementById('apt-status').getAttribute('data-val')) calculate(true);
-                }, 100);
-
-            } catch (e) {
-                console.error("Lỗi phục hồi form:", e);
-            }
-        }
-    }
-
-    initApp();
-
-    function toggleMode() {
-        const mode = document.querySelector('input[name="calc-mode"]:checked').value;
-        document.getElementById('custom-discount-box').style.display = (mode === 'custom' ? 'block' : 'none');
-        document.getElementById('auto-extra-discount-box').style.display = (mode === 'auto' ? 'block' : 'none');
-    }
-
-    function toggleExtraDetails() {
-        const isChecked = document.getElementById('enable-extra').checked;
-        document.getElementById('extra-details-area').style.display = isChecked ? 'block' : 'none';
-    }
-
-    function handleExTypeChange(el) {
-        const row = el.closest('tr');
-        const baseSelect = row.querySelector('.ex-base');
-        if (el.value === 'amount') {
-            baseSelect.value = 'after-vat';
-            baseSelect.disabled = true;
-        } else {
-            baseSelect.disabled = false;
-        }
-    }
-
-    function addExtraRow() {
-        const row = `<tr>
-            <td><select class="ex-type" onchange="handleExTypeChange(this)"><option value="percent">Tỷ lệ (%)</option><option value="amount">Số tiền (VNĐ)</option></select></td>
-            <td><select class="ex-base"><option value="after-vat">Giá tiền Đất sau CK trước (Gồm VAT)</option><option value="before-vat">Giá tiền Đất sau CK trước (Chưa VAT)</option></select></td>
-            <td><input type="number" class="ex-value" placeholder="Nhập giá trị..." step="0.1"></td>
-            <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
-        </tr>`;
-        document.getElementById('extra-body').insertAdjacentHTML('beforeend', row);
-    }
-
-    function addCustomRow() {
-        const row = `<tr>
-            <td><input type="text" class="c-name" placeholder="Lý do chiết khấu..."></td>
-            <td><input type="number" class="c-rate" value="0" step="0.1"></td>
-            <td><button class="btn-remove" onclick="this.closest('tr').remove()">X</button></td>
-        </tr>`;
-        document.getElementById('custom-body').insertAdjacentHTML('beforeend', row);
-    }
-
-    function cleanAndParsePrice(val) {
-        if (!val) return 0;
-        let cleanVal = String(val).replace(/\s+/g, '').replace(/[^0-9]/g, '');
-        return Number(cleanVal) || 0;
-    }
-
-    function formatMoney(num) {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Math.round(num));
-    }
-
-    function getFormattedDate(dateObj) {
-        let dd = String(dateObj.getDate()).padStart(2, '0');
-        let mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-        let yyyy = dateObj.getFullYear();
-        return `${dd}/${mm}/${yyyy}`;
-    }
-
-    function calculateDate(baseDate, daysToAdd) {
-        if (daysToAdd === null) return "Theo TB của CĐT";
-        let d = new Date(baseDate);
-        d.setDate(d.getDate() + daysToAdd);
-        return getFormattedDate(d);
-    }
-
-    // ===== HÀM GỬI DỮ LIỆU LÊN GOOGLE SHEET ====
-    function sendDataToSheet(khachHang, maCan, giaNY, tongCK, giaSauCK) {
-        const saleInfoStr = localStorage.getItem('saleInfo');
-        let saleName = "Chưa khai báo";
-        let salePhone = "Chưa khai báo";
-        
-        if (saleInfoStr) {
-            const info = JSON.parse(saleInfoStr);
-            saleName = info.name;
-            salePhone = info.phone;
-        }
-
-        const payload = {
-            saleName: saleName,
-            salePhone: salePhone,
-            khachHang: khachHang,
-            maCan: maCan,
-            giaNiemYet: giaNY,
-            tongChietKhau: tongCK,
-            giaSauCK: giaSauCK
-        };
-
-        fetch("https://script.google.com/macros/s/AKfycby8s4LNC59rimvdIYXsDD-OnUAz_K5pcXSoMsHkgCq1v5opAVhd9Zzug_Y_0NthlklphQ/exec", {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
-            },
-            body: JSON.stringify(payload)
-        }).catch(err => console.log("Lưu log sheet thất bại:", err));
-    }
-
-    // ===== THUẬT TOÁN TÍNH CHIẾT KHẤU TÂN TRÀO =====
-    function calculate(isAutoRestore = false) {
-        const codeInput = document.getElementById('apt-code').value.toUpperCase().trim();
-        const depositDate = document.getElementById('deposit-date').value;
-        const khachHang = document.getElementById('fullname').value || "Khách hàng";
-        
-        if (masterData.length === 0) return alert("Hệ thống chưa tải xong dữ liệu!");
-        if (!codeInput) return alert("Vui lòng nhập mã sản phẩm!");
-        if (!depositDate) return alert("Vui lòng chọn Ngày đặt cọc!");
-
-        const apt = findApt(codeInput);
-        if (!apt) return alert("Không tìm thấy mã sản phẩm hợp lệ!");
-
-        const status = document.getElementById('apt-status').getAttribute('data-val');
-        if (!status) return alert("Vui lòng nhập đúng mã sản phẩm để phần mềm nhận diện tình trạng!");
-
-        const mode = document.querySelector('input[name="calc-mode"]:checked').value;
-        const plan = document.getElementById('payment-plan').value;
-        if (!plan) return alert("Vui lòng chọn phương thức thanh toán!");
-
-        // Lưu State vào SessionStorage
-        const formState = {
-            fullname: khachHang,
-            aptCode: codeInput,
-            depositDate: depositDate,
-            status: status,
-            plan: plan,
-            mode: mode,
-            enableExtra: document.getElementById('enable-extra').checked,
-            extraRows: Array.from(document.querySelectorAll('#extra-body tr')).map(tr => ({
-                type: tr.querySelector('.ex-type').value,
-                base: tr.querySelector('.ex-base').value,
-                val: tr.querySelector('.ex-value').value
-            })),
-            customRows: Array.from(document.querySelectorAll('#custom-body tr')).map(tr => ({
-                name: tr.querySelector('.c-name').value,
-                val: tr.querySelector('.c-rate').value
-            }))
-        };
-        sessionStorage.setItem('tantrao_form_state', JSON.stringify(formState));
-
-        // Bóc tách Giá Đất và Giá Xây
-        const giaDat = cleanAndParsePrice(layGiaTriCot(apt, "gia_dat"));
-        const giaXay = cleanAndParsePrice(layGiaTriCot(apt, "gia_xay"));
-        const giaTongGoc = giaDat + giaXay;
-        
-        if(giaDat === 0 || giaXay === 0) return alert("Lỗi: Dữ liệu Giá Đất hoặc Giá Xây không hợp lệ.");
-
-        let giaDatSauCK = giaDat;
-        let giaXaySauCK = giaXay;
-        let breakdown = "";
-
-        // 1. TÍNH CHIẾT KHẤU CỦA CĐT (CHỈ TRÊN TIỀN ĐẤT)
-        if (mode === 'auto') {
-            if (status === 'DaXay') {
-                if (plan === '12') {
-                    let giamDat = giaDat * 0.095;
-                    breakdown += `• CK 9.5% Tiến độ 12T (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--primary)">-${formatMoney(giamDat)}</strong><br>`;
-                    giaDatSauCK -= giamDat;
-                } else if (plan === '30') {
-                    let giamDat = giaDat * 0.15;
-                    breakdown += `• CK 15% Thanh toán sớm (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--primary)">-${formatMoney(giamDat)}</strong><br>`;
-                    giaDatSauCK -= giamDat;
-                }
-            } else if (status === 'ChuaXay') {
-                if (plan === '30') {
-                    let giamDat = giaDat * 0.07;
-                    breakdown += `• CK 7% Thanh toán sớm tiền Đất (Trừ trực tiếp vào tiền Đất): <strong style="color:var(--primary)">-${formatMoney(giamDat)}</strong><br>`;
-                    giaDatSauCK -= giamDat;
-                }
-            }
-        }
-
-        // 2. TÍNH CHIẾT KHẤU BỔ SUNG & THỦ CÔNG (TRỪ LŨY KẾ VÀO TIỀN ĐẤT)
-        if (mode === 'auto' && document.getElementById('enable-extra').checked) {
-            const rows = document.querySelectorAll('#extra-body tr');
-            rows.forEach((row, index) => {
-                const type = row.querySelector('.ex-type').value;
-                const base = row.querySelector('.ex-base').value;
-                const val = parseFloat(row.querySelector('.ex-value').value) || 0;
-
-                if (val > 0) {
-                    if (type === 'amount') {
-                        breakdown += `• CK bổ sung tiền mặt #${index + 1} (Trừ vào Đất): <strong style="color:var(--primary)">-${formatMoney(val)}</strong><br>`;
-                        giaDatSauCK -= val;
-                    } else {
-                        let refPrice = (base === 'before-vat') ? (giaDatSauCK / 1.1) : giaDatSauCK;
-                        let extraDisc = refPrice * (val / 100);
-                        let baseText = (base === 'before-vat') ? "trên tiền Đất (chưa VAT)" : "trên tiền Đất (gồm VAT)";
-                        breakdown += `• CK bổ sung #${index + 1} (${val}% ${baseText}): <strong style="color:var(--primary)">-${formatMoney(extraDisc)}</strong><br>`;
-                        giaDatSauCK -= extraDisc;
-                    }
-                }
-            });
-        } else if (mode === 'custom') {
-            const names = document.querySelectorAll('.c-name');
-            const rates = document.querySelectorAll('.c-rate');
-            names.forEach((n, idx) => {
-                let r = parseFloat(rates[idx].value) / 100;
-                if (r > 0) {
-                    let tienGiam = giaDatSauCK * r;
-                    breakdown += `• ${n.value || 'Chiết khấu bổ sung'} (${rates[idx].value}% trên tiền Đất): <strong style="color:var(--primary)">-${formatMoney(tienGiam)}</strong><br>`;
-                    giaDatSauCK -= tienGiam;
-                }
-            });
-        }
-
-        if (giaDatSauCK < 0) giaDatSauCK = 0;
-        if (breakdown === "") breakdown = "<i>Không áp dụng mức chiết khấu nào.</i>";
-
-        giaDatSauCK = Math.round(giaDatSauCK / 1000) * 1000;
-        let tongGiaSauCK = giaDatSauCK + giaXaySauCK;
-
-        document.getElementById('out-name').innerText = khachHang;
-        document.getElementById('out-code').innerText = codeInput;
-        document.getElementById('out-type').innerText = layGiaTriCot(apt, "Phan_khu") || layGiaTriCot(apt, "phan_khu") || "Tân Trào";
-        document.getElementById('out-area').innerText = layGiaTriCot(apt, "dien_tich") || "0";
-        
-        document.getElementById('out-price-land').innerText = formatMoney(giaDat);
-        document.getElementById('out-price-build').innerText = formatMoney(giaXay);
-        document.getElementById('out-price-raw').innerText = formatMoney(giaTongGoc);
-        
-        document.getElementById('out-price-final').innerText = formatMoney(tongGiaSauCK);
-        document.getElementById('discount-breakdown').innerHTML = breakdown;
-
-        renderSchedule(status, plan, giaDatSauCK, giaXaySauCK, tongGiaSauCK, depositDate);
-        
-        document.getElementById('current-print-date').innerText = getFormattedDate(new Date());
-
-        document.getElementById('result-box').style.display = 'block';
-        if (!isAutoRestore) {
-            window.scrollTo({ top: document.getElementById('result-box').offsetTop, behavior: 'smooth' });
-            sendDataToSheet(khachHang, codeInput, giaTongGoc, giaTongGoc - tongGiaSauCK, tongGiaSauCK);
-        }
-    }
-
-    // ===== RENDER 2 LOẠI BẢNG TIẾN ĐỘ =====
-    function renderSchedule(status, plan, finalGiaDat, finalGiaXay, tongGiaSauCK, depositDateStr) {
-        const container = document.getElementById('schedule-content');
-        container.innerHTML = "";
-        const deposit = 50000000; 
-        let hdmbObj = new Date(depositDateStr);
-        hdmbObj.setDate(hdmbObj.getDate() + 7); 
-
-        if (status === 'DaXay') {
-            let steps = [];
-            if (plan === '12') {
-                steps = [
-                    {d: "Lần 1_Ngay khi ký HĐMB", t: "T", daysFromT: 0, p: 0.20},
-                    {d: "Lần 2_HĐMB", t: "T+90", daysFromT: 90, p: 0.20},
-                    {d: "Lần 3_HĐMB", t: "T+150", daysFromT: 150, p: 0.15},
-                    {d: "Lần 4_HĐMB", t: "T+240", daysFromT: 240, p: 0.15},
-                    {d: "Lần 5_HĐMB (Dự kiến nhận Bàn giao)", t: "T+360", daysFromT: 360, p: 0.25},
-                    {d: "Lần 6_HĐMB (Thông báo nhận GCN)", t: "Theo TB", daysFromT: null, p: 0.05}
-                ];
-            } else if (plan === '36') {
-                steps = [
-                    {d: "Lần 1_Ngay khi ký HĐMB", t: "T", daysFromT: 0, p: 0.15},
-                    {d: "Lần 2_HĐMB", t: "T+120", daysFromT: 120, p: 0.10},
-                    {d: "Lần 3_HĐMB", t: "T+240", daysFromT: 240, p: 0.10},
-                    {d: "Lần 4_HĐMB", t: "T+360", daysFromT: 360, p: 0.15},
-                    {d: "Lần 5_HĐMB", t: "T+480", daysFromT: 480, p: 0.05},
-                    {d: "Lần 6_HĐMB", t: "T+600", daysFromT: 600, p: 0.05},
-                    {d: "Lần 7_HĐMB", t: "T+720", daysFromT: 720, p: 0.05},
-                    {d: "Lần 8_HĐMB", t: "T+840", daysFromT: 840, p: 0.05},
-                    {d: "Lần 9_HĐMB (Dự kiến nhận Bàn giao)", t: "T+1080", daysFromT: 1080, p: 0.25},
-                    {d: "Lần 10_HĐMB (Thông báo nhận GCN)", t: "Theo TB", daysFromT: null, p: 0.05}
-                ];
-            } else if (plan === '30') {
-                steps = [
-                    {d: "Lần 1_Ngay khi ký HĐMB", t: "T", daysFromT: 0, p: 0.20},
-                    {d: "Lần 2_Thanh toán sớm", t: "T+30", daysFromT: 30, p: 0.75},
-                    {d: "Lần 3_Nhận GCN", t: "Theo TB", daysFromT: null, p: 0.05}
-                ];
-            }
-
-            let html = `<div class="schedule-header">TIẾN ĐỘ THANH TOÁN (SẢN PHẨM ĐÃ XÂY DỰNG)</div>
-                <table class="schedule-table">
-                <tr><th style="width: 35%;">Tiến độ thanh toán HĐMB</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>
-                <tr><td><strong>Đặt cọc</strong></td><td class="td-center">-</td><td class="td-center"><strong style="color: var(--secondary);">${getFormattedDate(new Date(depositDateStr))}</strong></td><td class="td-center">-</td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(deposit)}</strong></td></tr>`;
-            
-            steps.forEach((s, i) => {
-                let amount = Math.round((tongGiaSauCK * s.p) / 1000) * 1000;
-                let note = (i === 0) ? `<br><div style="font-size: 12px; color: var(--text-label); margin-top: 5px;">(Đã bao gồm 50tr cọc.<br>Nộp thêm: <b>${formatMoney(amount - deposit)}</b>)</div>` : "";
-                let dateStr = (s.daysFromT === null) ? "Theo TB" : calculateDate(hdmbObj, s.daysFromT);
-
-                html += `<tr><td style="text-align: justify;">${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong>${note}</td></tr>`;
-            });
-            html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Tổng cộng:</strong></td><td class="td-center"><strong>100%</strong></td><td class="td-right"><strong style="color:var(--primary); font-size: 18px;">${formatMoney(tongGiaSauCK)}</strong></td></tr></table>`;
-            container.innerHTML = html;
-        } 
-        
-        else {
-            let landSteps = [];
-            if (plan === '12') {
-                landSteps = [
-                    {d: "Lần 1_Ngay khi ký HĐMB", t: "T", daysFromT: 0, p: 0.20},
-                    {d: "Lần 2_HĐMB", t: "T+90", daysFromT: 90, p: 0.20},
-                    {d: "Lần 3_HĐMB", t: "T+120", daysFromT: 120, p: 0.15},
-                    {d: "Lần 4_HĐMB", t: "T+180", daysFromT: 180, p: 0.15},
-                    {d: "Lần 5_HĐMB", t: "T+360", daysFromT: 360, p: 0.25}
-                ];
-            } else {
-                landSteps = [
-                    {d: "Lần 1_Ngay khi ký HĐMB", t: "T", daysFromT: 0, p: 0.20},
-                    {d: "Lần 2_Thanh toán sớm", t: "T+30", daysFromT: 30, p: 0.75}
-                ];
-            }
-
-            // TÍNH MỐC THỜI GIAN THU TIỀN XÂY DỰNG: Ký HĐMB + 9 tháng
-            let tXD_Obj = new Date(hdmbObj);
-            tXD_Obj.setMonth(tXD_Obj.getMonth() + 9);
-
-            let buildSteps = [
-                {d: "Lần 1_Giá trị XD<br><i style='color:var(--text-label); font-size:12px; font-weight:normal;'>(Tạm tính thời gian thu tiền XD)</i>", t: "T + 9 tháng", exactDate: tXD_Obj, p: 0.30},
-                {d: "Lần 2_Giá trị XD", t: "Lần 1 XD + 90 ngày", exactDate: new Date(tXD_Obj.getTime() + 90 * 24 * 60 * 60 * 1000), p: 0.15},
-                {d: "Lần 3_Giá trị XD (Thông báo bàn giao)", t: "Lần 1 XD + 180 ngày", exactDate: new Date(tXD_Obj.getTime() + 180 * 24 * 60 * 60 * 1000), p: 0.50}
-            ];
-
-            // BẢNG 1: ĐẤT
-            let html = `<div class="schedule-header">1. TIẾN ĐỘ THANH TOÁN GIÁ TRỊ QUYỀN SỬ DỤNG ĐẤT (95%)</div>`;
-            html += `<table class="schedule-table"><tr><th style="width: 35%;">Tiến độ HĐMB Đất</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>`;
-            html += `<tr><td><strong>Đặt cọc</strong></td><td class="td-center">-</td><td class="td-center"><strong style="color: var(--secondary);">${getFormattedDate(new Date(depositDateStr))}</strong></td><td class="td-center">-</td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(deposit)}</strong></td></tr>`;
-            
-            let totalLandPaid = 0;
-            landSteps.forEach((s, i) => {
-                let amount = Math.round((finalGiaDat * s.p) / 1000) * 1000;
-                totalLandPaid += amount;
-                let note = (i === 0) ? `<br><div style="font-size: 12px; color: var(--text-label); margin-top: 5px;">(Đã bao gồm 50tr cọc.<br>Nộp thêm: <b>${formatMoney(amount - deposit)}</b>)</div>` : "";
-                let dateStr = calculateDate(hdmbObj, s.daysFromT);
-                html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong>${note}</td></tr>`;
-            });
-            html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Đất 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--primary);">${formatMoney(totalLandPaid)}</strong></td></tr></table>`;
-
-            // BẢNG 2: XÂY
-            html += `<div class="schedule-header">2. TIẾN ĐỘ THANH TOÁN GIÁ TRỊ XÂY DỰNG (95%)</div>`;
-            html += `<table class="schedule-table"><tr><th style="width: 35%;">Tiến độ Giá trị XD</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>`;
-            
-            let totalBuildPaid = 0;
-            buildSteps.forEach((s) => {
-                let amount = Math.round((finalGiaXay * s.p) / 1000) * 1000;
-                totalBuildPaid += amount;
-                let dateStr = getFormattedDate(s.exactDate);
-                html += `<tr><td>${s.d}</td><td class="td-center">${s.t}</td><td class="td-center" style="color: var(--primary);"><strong>${dateStr}</strong></td><td class="td-center"><strong>${(s.p * 100)}%</strong></td><td class="td-right"><strong>${formatMoney(amount)}</strong></td></tr>`;
-            });
-            html += `<tr style="background: #FFF4EC;"><td colspan="3" class="td-right"><strong>Cộng (Tiền Xây 95%):</strong></td><td class="td-center"><strong>95%</strong></td><td class="td-right"><strong style="color:var(--primary);">${formatMoney(totalBuildPaid)}</strong></td></tr></table>`;
-
-            // ĐỢT CUỐI: 5% TỔNG
-            let final5Percent = tongGiaSauCK - totalLandPaid - totalBuildPaid;
-            html += `<div class="schedule-header">3. THANH TOÁN ĐỢT CUỐI (5% TỔNG GIÁ TRỊ CĂN)</div>`;
-            html += `<table class="schedule-table"><tr><th style="width: 35%;">Tiến độ Bàn giao GCN</th><th style="width: 15%;">Thời hạn</th><th style="width: 15%;">Ngày dự kiến</th><th style="width: 10%;">Tỷ lệ</th><th style="width: 25%;">Số tiền (VNĐ)</th></tr>`;
-            html += `<tr><td>Lần 4_HĐMB (Giá trị QSD đất + Giá trị XD)<br><i>(Theo thông báo nhận GCN của CĐT)</i></td><td class="td-center">Theo TB</td><td class="td-center" style="color: var(--primary);"><strong>Theo TB</strong></td><td class="td-center"><strong>5%</strong></td><td class="td-right"><strong style="color:var(--secondary)">${formatMoney(final5Percent)}</strong></td></tr></table>`;
-            
-            // TỔNG KẾT TOÀN BỘ
-            html += `<table class="schedule-table"><tr style="background: #FFF4EC; border-top: 2px solid var(--primary);"><td colspan="3" class="td-right" style="border:none; padding-right:15px; font-size:16px; color: var(--text-main);"><strong>TỔNG GIÁ TRỊ CẦN THANH TOÁN:</strong></td><td class="td-center" style="border:none; color: var(--text-main);"><strong>100%</strong></td><td class="td-right" style="border:none;"><strong style="color:var(--primary); font-size: 20px;">${formatMoney(tongGiaSauCK)}</strong></td></tr></table>`;
-            
-            container.innerHTML = html;
-        }
-    }
-
-    // --- FIX LỖI IN TRÊN ĐIỆN THOẠI BẰNG SỰ KIỆN onafterprint ---
-    function inPhieu() {
-        document.getElementById('print-title-area').style.display = 'block';
-        window.print();
-    }
-    
-    window.onafterprint = function() {
-        document.getElementById('print-title-area').style.display = 'none';
-    };
-</script>
 
 </body>
 </html>
